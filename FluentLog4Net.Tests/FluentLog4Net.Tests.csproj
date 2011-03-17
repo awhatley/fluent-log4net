@@ -51,7 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Log4NetConfigurationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryConfigurationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentLog4Net\FluentLog4Net.csproj">
