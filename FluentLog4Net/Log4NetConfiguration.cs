@@ -1,7 +1,9 @@
 ﻿using System;
 
 using log4net;
+using log4net.Core;
 using log4net.Repository;
+using log4net.Util;
 
 namespace FluentLog4Net
 {
@@ -10,30 +12,60 @@ namespace FluentLog4Net
     /// </summary>
     public class Log4NetConfiguration
     {
-        private readonly RepositoryConfiguration _repositoryConfiguration = new RepositoryConfiguration();
-        private readonly RenderingConfiguration _renderingConfiguration = new RenderingConfiguration();
-        private readonly LoggingConfiguration _loggingConfiguration = new LoggingConfiguration();
+        private readonly RenderingConfiguration _renderingConfiguration;
+        private readonly LoggingConfiguration _loggingConfiguration;
+
+        private bool? _reset;
+        private bool? _internalDebugging;
+        private Level _threshold;
+
+        public Log4NetConfiguration()
+        {
+            _renderingConfiguration = new RenderingConfiguration(this);
+            _loggingConfiguration = new LoggingConfiguration();
+        }
 
         /// <summary>
-        /// Configures the default log4net repository.
+        /// Enables or disables internal log4net debugging for this configuration.
         /// </summary>
-        /// <param name="repo">A method that configures the repository settings.</param>
+        /// <param name="internalDebugging">Whether to enable internal debugging.</param>
         /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
-        public Log4NetConfiguration Repository(Action<RepositoryConfiguration> repo)
+        public Log4NetConfiguration InternalDebugging(bool internalDebugging)
         {
-            repo(_repositoryConfiguration);
+            _internalDebugging = internalDebugging;
+            return this;
+        }
+
+        /// <summary>
+        /// Resets the existing configuration before applying any new settings.
+        /// </summary>
+        /// <param name="overwrite">Whether to overwrite the existing configuration.</param>
+        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
+        public Log4NetConfiguration Overwrite(bool overwrite)
+        {
+            _reset = overwrite;
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a default threshold to all loggers across the repository.
+        /// </summary>
+        /// <param name="threshold">A <see cref="Level"/> at which to limit logged messages.</param>
+        /// <returns></returns>
+        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
+        public Log4NetConfiguration Threshold(Level threshold)
+        {
+            _threshold = threshold;
             return this;
         }
 
         /// <summary>
         /// Registers object renderers for custom message formatting.
         /// </summary>
-        /// <param name="rendering">A method that configures object renderers.</param>
-        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
-        public Log4NetConfiguration Rendering(Action<RenderingConfiguration> rendering)
+        /// <returns>The current <see cref="RenderingConfiguration"/> instance.</returns>
+        public RenderingConfiguration Render
         {
-            rendering(_renderingConfiguration);
-            return this;
+            get { return _renderingConfiguration; }
         }
 
         /// <summary>
@@ -54,7 +86,15 @@ namespace FluentLog4Net
         {
             var repository = LogManager.GetRepository();
             
-            _repositoryConfiguration.ApplyConfigurationTo(repository);
+            if(_internalDebugging.HasValue)
+                LogLog.InternalDebugging = _internalDebugging.Value;
+
+            if(_reset.HasValue && _reset.Value)
+                repository.ResetConfiguration();
+
+            if(_threshold != null)
+                repository.Threshold = _threshold;
+
             _renderingConfiguration.ApplyConfigurationTo(repository);
             _loggingConfiguration.ApplyConfigurationTo(repository);
             repository.Configured = true;

@@ -11,4 +11,5 @@ and easier to read at a glance.
 Todo List
 ---------
 
-* Support for all built-in log4net appenders.
+* Support for all built-in log4net appenders
+* Validate config before applying

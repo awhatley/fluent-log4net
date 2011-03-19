@@ -20,12 +20,11 @@ namespace FluentLog4Net
         [Test]
         public void RenderRegistersRenderer()
         {
-            Log4Net.Configure()
-                .Rendering(r => r
-                    .Type<Int32>().Using<Int32Renderer>()
-                    .Type<Int64>().Using(typeof(Int64Renderer))
-                    .Type(typeof(Single)).Using(typeof(SingleRenderer))
-                    .Type(typeof(Double)).Using<DoubleRenderer>())
+            Log4Net.Configure()                
+                .Render.Type<Int32>().Using<Int32Renderer>()
+                .Render.Type<Int64>().Using(typeof(Int64Renderer))
+                .Render.Type(typeof(Single)).Using(typeof(SingleRenderer))
+                .Render.Type(typeof(Double)).Using<DoubleRenderer>()
                 .ApplyConfiguration();
 
             var repo = LogManager.GetRepository();
@@ -42,13 +41,13 @@ namespace FluentLog4Net
 
             Assert.That(() =>
                 Log4Net.Configure()
-                    .Rendering(r => r.Type<Int32>().Using(typeof(Int32)))
+                    .Render.Type<Int32>().Using(typeof(Int32))
                     .ApplyConfiguration(),
                 Throws.ArgumentException.With.Message.EqualTo(String.Format(error, typeof(Int32).FullName)));
 
             Assert.That(() =>
                 Log4Net.Configure()
-                    .Rendering(r => r.Type(typeof(Int64)).Using(typeof(Int64)))
+                    .Render.Type(typeof(Int64)).Using(typeof(Int64))
                     .ApplyConfiguration(),
                 Throws.ArgumentException.With.Message.EqualTo(String.Format(error, typeof(Int64).FullName)));
         }

@@ -11,7 +11,13 @@ namespace FluentLog4Net
     /// </summary>
     public class RenderingConfiguration
     {
+        private readonly Log4NetConfiguration _parent;
         private readonly IDictionary<Type, IObjectRenderer> _map = new Dictionary<Type, IObjectRenderer>();
+
+        public RenderingConfiguration(Log4NetConfiguration parent)
+        {
+            _parent = parent;
+        }
 
         /// <summary>
         /// Registers a custom renderer for the specified type.
@@ -52,10 +58,10 @@ namespace FluentLog4Net
             /// </summary>
             /// <typeparam name="TRenderer">A type that implements <see cref="IObjectRenderer"/>.</typeparam>
             /// <returns>The current <see cref="RenderingConfiguration"/> instance.</returns>
-            public RenderingConfiguration Using<TRenderer>() where TRenderer : IObjectRenderer, new()
+            public Log4NetConfiguration Using<TRenderer>() where TRenderer : IObjectRenderer, new()
             {
                 _renderingConfiguration._map.Add(_objectType, new TRenderer());
-                return _renderingConfiguration;
+                return _renderingConfiguration._parent;
             }
 
             /// <summary>
@@ -63,14 +69,14 @@ namespace FluentLog4Net
             /// </summary>
             /// <param name="rendererType">A type that implements <see cref="IObjectRenderer"/>.</param>
             /// <returns>The current <see cref="RenderingConfiguration"/> instance.</returns>
-            public RenderingConfiguration Using(Type rendererType)
+            public Log4NetConfiguration Using(Type rendererType)
             {
                 var renderer = Activator.CreateInstance(rendererType) as IObjectRenderer;
                 if(renderer == null)
                     throw new ArgumentException("Type " + rendererType.FullName + " must implement IObjectRenderer to be configured as a renderer.");
 
                 _renderingConfiguration._map.Add(_objectType, renderer);
-                return _renderingConfiguration;
+                return _renderingConfiguration._parent;
             }
         }
 
