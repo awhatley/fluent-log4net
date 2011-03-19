@@ -1,3 +1,5 @@
+using FluentLog4Net.Configuration;
+
 namespace FluentLog4Net
 {
     /// <summary>

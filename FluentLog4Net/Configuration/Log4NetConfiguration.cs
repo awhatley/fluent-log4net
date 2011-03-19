@@ -5,7 +5,7 @@ using log4net.Core;
 using log4net.Repository;
 using log4net.Util;
 
-namespace FluentLog4Net
+namespace FluentLog4Net.Configuration
 {
     /// <summary>
     /// Stores the log4net settings as they are being fluently configured.
@@ -62,7 +62,6 @@ namespace FluentLog4Net
         /// <summary>
         /// Registers object renderers for custom message formatting.
         /// </summary>
-        /// <returns>The current <see cref="RenderingConfiguration"/> instance.</returns>
         public RenderingConfiguration Render
         {
             get { return _renderingConfiguration; }
@@ -71,7 +70,6 @@ namespace FluentLog4Net
         /// <summary>
         /// Configures and attaches appenders to logger instances.
         /// </summary>
-        /// <returns>The current <see cref="LoggingConfiguration"/> instance.</returns>
         public LoggingConfiguration Logging
         {
             get { return _loggingConfiguration; }
