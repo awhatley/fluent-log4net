@@ -12,13 +12,13 @@ namespace FluentLog4Net
     public class RenderingConfigurationTests
     {
         [SetUp]
-        public void ResetConfiguration()
+        public void Setup()
         {
             LogManager.GetRepository().ResetConfiguration();
         }
 
         [Test]
-        public void Render_Registers_Renderer()
+        public void RenderRegistersRenderer()
         {
             Log4Net.Configure()
                 .Rendering(r => r
@@ -36,7 +36,7 @@ namespace FluentLog4Net
         }
 
         [Test]
-        public void Render_Throws_ArgumentException_On_Wrong_Type()
+        public void RenderThrowsArgumentExceptionOnWrongType()
         {
             const string error = "Type {0} must implement IObjectRenderer to be configured as a renderer.";
 

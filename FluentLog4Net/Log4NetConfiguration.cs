@@ -12,6 +12,7 @@ namespace FluentLog4Net
     {
         private readonly RepositoryConfiguration _repositoryConfiguration = new RepositoryConfiguration();
         private readonly RenderingConfiguration _renderingConfiguration = new RenderingConfiguration();
+        private readonly LoggingConfiguration _loggingConfiguration = new LoggingConfiguration();
 
         /// <summary>
         /// Configures the default log4net repository.
@@ -36,6 +37,17 @@ namespace FluentLog4Net
         }
 
         /// <summary>
+        /// Configures and attaches appenders to logger instances.
+        /// </summary>
+        /// <param name="logging">A method that configures the loggers.</param>
+        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
+        public Log4NetConfiguration Logging(Action<LoggingConfiguration> logging)
+        {
+            logging(_loggingConfiguration);
+            return this;
+        }
+
+        /// <summary>
         /// Ends fluent configuration and exports all settings to log4net.
         /// </summary>
         public void ApplyConfiguration()
@@ -44,6 +56,7 @@ namespace FluentLog4Net
             
             _repositoryConfiguration.ApplyConfigurationTo(repository);
             _renderingConfiguration.ApplyConfigurationTo(repository);
+            _loggingConfiguration.ApplyConfigurationTo(repository);
             repository.Configured = true;
 
             var skeleton = repository as LoggerRepositorySkeleton;
