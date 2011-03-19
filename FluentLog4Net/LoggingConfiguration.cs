@@ -13,26 +13,32 @@ namespace FluentLog4Net
     /// </summary>
     public class LoggingConfiguration
     {
+        private readonly Log4NetConfiguration _log4NetConfiguration;
         private readonly LoggerConfiguration _rootLoggerConfiguration = new LoggerConfiguration();
         private readonly IDictionary<string, LoggerConfiguration> _childLoggerConfigurations = new Dictionary<string, LoggerConfiguration>();
+
+        internal LoggingConfiguration(Log4NetConfiguration log4NetConfiguration)
+        {
+            _log4NetConfiguration = log4NetConfiguration;
+        }
 
         /// <summary>
         /// Configures the root logger instance.
         /// </summary>
         /// <param name="log">A method that configures the root logger.</param>
-        /// <returns>The current <see cref="LoggingConfiguration"/> instance.</returns>
-        public LoggingConfiguration Root(Action<LoggerConfiguration> log)
+        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
+        public Log4NetConfiguration Root(Action<LoggerConfiguration> log)
         {
             log(_rootLoggerConfiguration);
-            return this;
+            return _log4NetConfiguration;
         }
 
         /// <summary>
         /// Configures a logger instance for the specified type.
         /// </summary>
         /// <param name="log">A method that configures the logger.</param>
-        /// <returns>The current <see cref="LoggingConfiguration"/> instance.</returns>
-        public LoggingConfiguration For<T>(Action<LoggerConfiguration> log)
+        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
+        public Log4NetConfiguration For<T>(Action<LoggerConfiguration> log)
         {
             return For(typeof(T), log);
         }
@@ -42,8 +48,8 @@ namespace FluentLog4Net
         /// </summary>
         /// <param name="type">The type for which to configure a logger.</param>
         /// <param name="log">A method that configures the logger.</param>
-        /// <returns>The current <see cref="LoggingConfiguration"/> instance.</returns>
-        public LoggingConfiguration For(Type type, Action<LoggerConfiguration> log)
+        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
+        public Log4NetConfiguration For(Type type, Action<LoggerConfiguration> log)
         {
             return For(type.FullName, log);
         }
@@ -53,14 +59,14 @@ namespace FluentLog4Net
         /// </summary>
         /// <param name="name">The name of the logger to configure.</param>
         /// <param name="log">A method that configures the logger.</param>
-        /// <returns>The current <see cref="LoggingConfiguration"/> instance.</returns>
-        public LoggingConfiguration For(string name, Action<LoggerConfiguration> log)
+        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
+        public Log4NetConfiguration For(string name, Action<LoggerConfiguration> log)
         {
             if(!_childLoggerConfigurations.ContainsKey(name))
                 _childLoggerConfigurations.Add(name, new LoggerConfiguration());
 
             log(_childLoggerConfigurations[name]);
-            return this;
+            return _log4NetConfiguration;
         }
 
         internal void ApplyConfigurationTo(ILoggerRepository repository)

@@ -19,10 +19,10 @@ namespace FluentLog4Net
         private bool? _internalDebugging;
         private Level _threshold;
 
-        public Log4NetConfiguration()
+        internal Log4NetConfiguration()
         {
             _renderingConfiguration = new RenderingConfiguration(this);
-            _loggingConfiguration = new LoggingConfiguration();
+            _loggingConfiguration = new LoggingConfiguration(this);
         }
 
         /// <summary>
@@ -71,12 +71,10 @@ namespace FluentLog4Net
         /// <summary>
         /// Configures and attaches appenders to logger instances.
         /// </summary>
-        /// <param name="logging">A method that configures the loggers.</param>
-        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
-        public Log4NetConfiguration Logging(Action<LoggingConfiguration> logging)
+        /// <returns>The current <see cref="LoggingConfiguration"/> instance.</returns>
+        public LoggingConfiguration Logging
         {
-            logging(_loggingConfiguration);
-            return this;
+            get { return _loggingConfiguration; }
         }
 
         /// <summary>

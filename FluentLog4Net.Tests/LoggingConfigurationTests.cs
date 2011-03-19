@@ -22,12 +22,11 @@ namespace FluentLog4Net
         public void RootLoggerConfiguration()
         {
             Log4Net.Configure()
-                .Logging(l => l
-                    .Root(log => log
-                        .At(Level.Severe)
-                        .To<CustomAppender1>()
-                        .To(typeof(CustomAppender2))
-                        .To(new CustomAppender3())))
+                .Logging.Root(log => log
+                    .At(Level.Severe)
+                    .To<CustomAppender1>()
+                    .To(typeof(CustomAppender2))
+                    .To(new CustomAppender3()))
                 .ApplyConfiguration();
 
             var repo = (Hierarchy)LogManager.GetRepository();
@@ -45,7 +44,7 @@ namespace FluentLog4Net
 
             Assert.That(() =>
                 Log4Net.Configure()
-                    .Logging(l => l.Root(log => log.To(typeof(Int32))))
+                    .Logging.Root(log => log.To(typeof(Int32)))
                     .ApplyConfiguration(),
                 Throws.ArgumentException.With.Message.EqualTo(String.Format(error, typeof(Int32).FullName)));
         }
@@ -57,7 +56,7 @@ namespace FluentLog4Net
 
             Assert.That(() =>
                 Log4Net.Configure()
-                    .Logging(l => l.For<Int32>(log => log.To(typeof(Int32))))
+                    .Logging.For<Int32>(log => log.To(typeof(Int32)))
                     .ApplyConfiguration(),
                 Throws.ArgumentException.With.Message.EqualTo(String.Format(error, typeof(Int32).FullName)));
         }
@@ -66,12 +65,11 @@ namespace FluentLog4Net
         public void ChildLoggerGenericConfiguration()
         {
             Log4Net.Configure()
-                .Logging(l => l
-                    .For<TimeZone>(log => log
-                        .At(Level.Severe)
-                        .To<CustomAppender1>()
-                        .To(typeof(CustomAppender2))
-                        .To(new CustomAppender3())))
+                .Logging.For<TimeZone>(log => log
+                    .At(Level.Severe)
+                    .To<CustomAppender1>()
+                    .To(typeof(CustomAppender2))
+                    .To(new CustomAppender3()))
                 .ApplyConfiguration();
 
             var repo = LogManager.GetRepository();
@@ -88,12 +86,11 @@ namespace FluentLog4Net
         public void ChildLoggerTypeConfiguration()
         {
             Log4Net.Configure()
-                .Logging(l => l
-                    .For(typeof(TimeZone), log => log
-                        .At(Level.Severe)
-                        .To<CustomAppender1>()
-                        .To(typeof(CustomAppender2))
-                        .To(new CustomAppender3())))
+                .Logging.For(typeof(TimeZone), log => log
+                    .At(Level.Severe)
+                    .To<CustomAppender1>()
+                    .To(typeof(CustomAppender2))
+                    .To(new CustomAppender3()))
                 .ApplyConfiguration();
 
             var repo = LogManager.GetRepository();
@@ -110,12 +107,11 @@ namespace FluentLog4Net
         public void ChildLoggerNameConfiguration()
         {
             Log4Net.Configure()
-                .Logging(l => l
-                    .For("Foo", log => log
-                        .At(Level.Severe)
-                        .To<CustomAppender1>()
-                        .To(typeof(CustomAppender2))
-                        .To(new CustomAppender3())))
+                .Logging.For("Foo", log => log
+                    .At(Level.Severe)
+                    .To<CustomAppender1>()
+                    .To(typeof(CustomAppender2))
+                    .To(new CustomAppender3()))
                 .ApplyConfiguration();
 
             var repo = LogManager.GetRepository();
@@ -132,15 +128,16 @@ namespace FluentLog4Net
         public void ChildLoggersShareAppenderInstances()
         {
             Log4Net.Configure()
-                .Logging(l => l
-                    .For("Foo", log => log
-                        .To<CustomAppender1>()
-                        .To(typeof(CustomAppender2))
-                        .To(new CustomAppender3()))
-                    .For("Bar", log => log
-                        .To<CustomAppender1>()
-                        .To(typeof(CustomAppender2))
-                        .To(new CustomAppender3())))
+                .Logging.For("Foo", log => log
+                    .To<CustomAppender1>()
+                    .To(typeof(CustomAppender2))
+                    .To(new CustomAppender3()))
+
+                .Logging.For("Bar", log => log
+                    .To<CustomAppender1>()
+                    .To(typeof(CustomAppender2))
+                    .To(new CustomAppender3()))
+
                 .ApplyConfiguration();
 
             var repo = LogManager.GetRepository();

@@ -11,12 +11,12 @@ namespace FluentLog4Net
     /// </summary>
     public class RenderingConfiguration
     {
-        private readonly Log4NetConfiguration _parent;
+        private readonly Log4NetConfiguration _log4NetConfiguration;
         private readonly IDictionary<Type, IObjectRenderer> _map = new Dictionary<Type, IObjectRenderer>();
 
-        public RenderingConfiguration(Log4NetConfiguration parent)
+        internal RenderingConfiguration(Log4NetConfiguration log4NetConfiguration)
         {
-            _parent = parent;
+            _log4NetConfiguration = log4NetConfiguration;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace FluentLog4Net
             public Log4NetConfiguration Using<TRenderer>() where TRenderer : IObjectRenderer, new()
             {
                 _renderingConfiguration._map.Add(_objectType, new TRenderer());
-                return _renderingConfiguration._parent;
+                return _renderingConfiguration._log4NetConfiguration;
             }
 
             /// <summary>
@@ -76,7 +76,7 @@ namespace FluentLog4Net
                     throw new ArgumentException("Type " + rendererType.FullName + " must implement IObjectRenderer to be configured as a renderer.");
 
                 _renderingConfiguration._map.Add(_objectType, renderer);
-                return _renderingConfiguration._parent;
+                return _renderingConfiguration._log4NetConfiguration;
             }
         }
 
