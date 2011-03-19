@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Appenders\ConsoleAppenderTests.cs" />
     <Compile Include="Log4NetConfigurationTests.cs" />
     <Compile Include="LoggingConfigurationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -47,11 +47,12 @@
   <ItemGroup>
     <Compile Include="Appenders\AppenderDefinitionBuilder.cs" />
     <Compile Include="Configuration\AppenderConfiguration.cs" />
-    <Compile Include="AppenderExtensions.cs" />
+    <Compile Include="Append.cs" />
     <Compile Include="Appenders\ConsoleAppenderDefinition.cs" />
     <Compile Include="Appenders\IAppenderDefinition.cs" />
     <Compile Include="Configuration\LoggerConfiguration.cs" />
     <Compile Include="Configuration\RendererConfiguration.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Log4Net.cs" />
     <Compile Include="Configuration\Log4NetConfiguration.cs" />
     <Compile Include="Configuration\LoggingConfiguration.cs" />

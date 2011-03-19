@@ -6,18 +6,10 @@ using FluentLog4Net.Configuration;
 namespace FluentLog4Net
 {
     /// <summary>
-    /// Helper class for creating re-usable appender definition references.
+    /// Extension methods for configuring appender definitions.
     /// </summary>
-    public static class Append
+    public static class Extensions
     {
-        /// <summary>
-        /// Begins building a new appender definition.
-        /// </summary>
-        public static AppenderDefinitionBuilder To
-        {
-            get { return new AppenderDefinitionBuilder(); }
-        }
-
         /// <summary>
         /// Configures logging to the console.
         /// </summary>
@@ -26,7 +18,7 @@ namespace FluentLog4Net
         /// <returns>The current <see cref="LoggerConfiguration"/> instance.</returns>
         public static LoggerConfiguration Console(this AppenderConfiguration configure, Action<ConsoleAppenderDefinition> console)
         {
-            return configure.Appender(To.Console(console));
+            return configure.Appender(Append.To.Console(console));
         }
 
         /// <summary>

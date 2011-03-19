@@ -13,3 +13,4 @@ Todo List
 
 * Support for all built-in log4net appenders
 * Validate config before applying
+* Common threshold, filter, layout, and error-handler interfaces for appenders

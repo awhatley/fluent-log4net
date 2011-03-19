@@ -1,4 +1,6 @@
-﻿using log4net.Appender;
+﻿using System;
+
+using log4net.Appender;
 
 namespace FluentLog4Net.Appenders
 {
@@ -7,16 +9,62 @@ namespace FluentLog4Net.Appenders
     /// </summary>
     public class ConsoleAppenderDefinition : IAppenderDefinition
     {
-        private readonly ConsoleAppender _appender = new ConsoleAppender();
+        private readonly ConsoleAppender _appender;
+        private readonly ConsoleAppenderTarget _targeting;
 
         /// <summary>
-        /// Retrieves the appender instance being configured by this definition.
+        /// Initializes a new instance of the <see cref="ConsoleAppenderDefinition"/> class.
         /// </summary>
-        /// <value>An <see cref="IAppender" /> instance. The instance must
-        /// be the same on successive calls.</value>
-        public IAppender Appender
+        public ConsoleAppenderDefinition()
+        {
+            _appender = new ConsoleAppender();
+            _targeting = new ConsoleAppenderTarget(this);
+        }
+
+        IAppender IAppenderDefinition.Appender
         {
             get { return _appender; }
+        }
+
+        /// <summary>
+        /// Configures the output target of the console appender.
+        /// </summary>
+        public ConsoleAppenderTarget Targeting
+        {
+            get { return _targeting; }
+        }
+
+        /// <summary>
+        /// Configures the output target of a console appender.
+        /// </summary>
+        public class ConsoleAppenderTarget
+        {
+            private readonly ConsoleAppenderDefinition _consoleAppenderDefinition;
+
+            internal ConsoleAppenderTarget(ConsoleAppenderDefinition consoleAppenderDefinition)
+            {
+                _consoleAppenderDefinition = consoleAppenderDefinition;
+            }
+
+            /// <summary>
+            /// Sends messages to <see cref="Console.Out"/>.
+            /// </summary>
+            /// <returns>The current <see cref="ConsoleAppenderDefinition"/> instance.</returns>
+            public ConsoleAppenderDefinition ConsoleOut()
+            {
+                _consoleAppenderDefinition._appender.Target = ConsoleAppender.ConsoleOut;
+                return _consoleAppenderDefinition;
+            }
+
+            /// <summary>
+            /// Sends messages to <see cref="Console.Error"/>.
+            /// </summary>
+            /// <returns>The current <see cref="ConsoleAppenderDefinition"/> instance.</returns>
+            public ConsoleAppenderDefinition ConsoleError()
+            {
+                _consoleAppenderDefinition._appender.Target = ConsoleAppender.ConsoleError;
+                return _consoleAppenderDefinition;
+            }
         }
     }
 }
