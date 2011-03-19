@@ -8,8 +8,13 @@ namespace FluentLog4Net.Configuration
     /// </summary>
     public class LoggerConfiguration
     {
-        private readonly AppenderConfiguration _appenderConfiguration = new AppenderConfiguration();
+        private readonly AppenderConfiguration _appenderConfiguration;
         private Level _level;
+
+        internal LoggerConfiguration()
+        {
+            _appenderConfiguration = new AppenderConfiguration(this);
+        }
 
         /// <summary>
         /// Specifies the logging level for this logger.
@@ -34,6 +39,8 @@ namespace FluentLog4Net.Configuration
         {
             if(_level != null)
                 logger.Level = _level;
+
+            _appenderConfiguration.ApplyTo(logger);
         }
     }
 }

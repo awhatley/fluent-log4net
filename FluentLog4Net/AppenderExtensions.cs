@@ -15,7 +15,7 @@ namespace FluentLog4Net
         /// </summary>
         public static AppenderDefinitionBuilder To
         {
-            get { return null; }
+            get { return new AppenderDefinitionBuilder(); }
         }
 
         /// <summary>

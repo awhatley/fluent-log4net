@@ -1,10 +1,15 @@
 using System;
 
+using FluentLog4Net.Appenders;
+
 using log4net;
+using log4net.Appender;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
 
 using NUnit.Framework;
+
+using Rhino.Mocks;
 
 namespace FluentLog4Net
 {
@@ -37,6 +42,24 @@ namespace FluentLog4Net
 
             var repo = (Hierarchy)LogManager.GetRepository();
             Assert.That(repo.Root.Level, Is.EqualTo(Level.Debug));
+        }
+
+        [Test]
+        public void RootAppenderConfiguration()
+        {
+            var mockAppender = MockRepository.GenerateMock<IAppender>();
+            var mockDefinition = MockRepository.GenerateMock<IAppenderDefinition>();
+            mockDefinition.Stub(a => a.Appender).Return(mockAppender);
+
+            Log4Net.Configure()
+                .Logging.Root(log => log
+                    .At(Level.Verbose)
+                    .To.Appender(mockDefinition))
+                .ApplyConfiguration();
+
+            var repo = (Hierarchy)LogManager.GetRepository();
+            Assert.That(repo.Root.Appenders, Has.Count.EqualTo(1));
+            Assert.That(repo.Root.Appenders[0], Is.EqualTo(mockAppender));
         }
 
         [Test]
@@ -78,6 +101,31 @@ namespace FluentLog4Net
             Assert.That(intLogger.EffectiveLevel, Is.EqualTo(Level.Trace));
             Assert.That(longLogger.EffectiveLevel, Is.EqualTo(Level.Trace));
             Assert.That(fooLogger.EffectiveLevel, Is.EqualTo(Level.Trace));
+        }
+
+        [Test]
+        public void ChildAppenderConfiguration()
+        {
+            var mockAppender = MockRepository.GenerateMock<IAppender>();
+            var mockDefinition = MockRepository.GenerateMock<IAppenderDefinition>();
+            mockDefinition.Stub(a => a.Appender).Return(mockAppender);
+
+            Log4Net.Configure()
+                .Logging.For<Int32>(log => log.To.Appender(mockDefinition))
+                .Logging.For(typeof(Int64), log => log.To.Appender(mockDefinition))
+                .Logging.For("Foo", log => log.To.Appender(mockDefinition))
+                .ApplyConfiguration();
+
+            var intLogger = (Logger)LogManager.GetLogger(typeof(Int32)).Logger;
+            var longLogger = (Logger)LogManager.GetLogger(typeof(Int64)).Logger;
+            var fooLogger = (Logger)LogManager.GetLogger("Foo").Logger;
+
+            Assert.That(intLogger.Appenders, Has.Count.EqualTo(1));
+            Assert.That(intLogger.Appenders[0], Is.EqualTo(mockAppender));
+            Assert.That(longLogger.Appenders, Has.Count.EqualTo(1));
+            Assert.That(longLogger.Appenders[0], Is.EqualTo(mockAppender));
+            Assert.That(fooLogger.Appenders, Has.Count.EqualTo(1));
+            Assert.That(fooLogger.Appenders[0], Is.EqualTo(mockAppender));
         }
     }
 }

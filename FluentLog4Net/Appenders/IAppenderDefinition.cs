@@ -8,10 +8,10 @@ namespace FluentLog4Net.Appenders
     public interface IAppenderDefinition
     {
         /// <summary>
-        /// Retrieves the appender instance configured by this definition.
+        /// Retrieves the appender instance being configured by this definition.
         /// </summary>
-        /// <returns>An <see cref="IAppender"/> instance. The instance must
-        /// be the same on successive calls.</returns>
-        IAppender GetAppender();
+        /// <value>An <see cref="IAppender" /> instance. The instance must
+        /// be the same on successive calls.</value>
+        IAppender Appender { get; }
     }
 }
