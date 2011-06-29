@@ -11,13 +11,13 @@ namespace FluentLog4Net.Configuration
     /// </summary>
     public class LoggingConfiguration
     {
-        private readonly Log4NetConfiguration _log4NetConfiguration;
+        private readonly Func<Action<ILoggerRepository>, Log4NetConfiguration> _configure;
         private readonly LoggerConfiguration _rootLoggerConfiguration = new LoggerConfiguration();
         private readonly IDictionary<string, LoggerConfiguration> _childLoggerConfigurations = new Dictionary<string, LoggerConfiguration>();
 
-        internal LoggingConfiguration(Log4NetConfiguration log4NetConfiguration)
+        internal LoggingConfiguration(Func<Action<ILoggerRepository>, Log4NetConfiguration> configure)
         {
-            _log4NetConfiguration = log4NetConfiguration;
+            _configure = configure;
         }
 
         /// <summary>
@@ -28,7 +28,12 @@ namespace FluentLog4Net.Configuration
         public Log4NetConfiguration Root(Action<LoggerConfiguration> log)
         {
             log(_rootLoggerConfiguration);
-            return _log4NetConfiguration;
+            
+            return _configure(repo => {
+                var hierarchy = repo as Hierarchy;
+                if(hierarchy != null)
+                    _rootLoggerConfiguration.ApplyTo(hierarchy.Root);
+            });
         }
 
         /// <summary>
@@ -64,21 +69,15 @@ namespace FluentLog4Net.Configuration
                 _childLoggerConfigurations.Add(name, new LoggerConfiguration());
 
             log(_childLoggerConfigurations[name]);
-            return _log4NetConfiguration;
-        }
 
-        internal void ApplyConfigurationTo(ILoggerRepository repository)
-        {
-            var hierarchy = repository as Hierarchy;
-            if(hierarchy != null)
-                _rootLoggerConfiguration.ApplyTo(hierarchy.Root);
-
-            foreach(var pair in _childLoggerConfigurations)
-            {
-                var logger = repository.GetLogger(pair.Key) as Logger;
-                if(logger != null)
-                    pair.Value.ApplyTo(logger);
-            }
+            return _configure(repo => {
+                foreach(var pair in _childLoggerConfigurations)
+                {
+                    var logger = repo.GetLogger(pair.Key) as Logger;
+                    if(logger != null)
+                        pair.Value.ApplyTo(logger);
+                }
+            });
         }
     }
 }

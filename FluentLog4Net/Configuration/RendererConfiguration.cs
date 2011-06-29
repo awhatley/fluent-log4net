@@ -9,13 +9,13 @@ namespace FluentLog4Net.Configuration
     /// </summary>
     public class RendererConfiguration
     {
-        private readonly RenderingConfiguration _renderingConfiguration;
-        private readonly Type _objectType;
+        private readonly Type _targetType;
+        private readonly Func<Type, Type, Func<IObjectRenderer>, Log4NetConfiguration> _registerRenderer;
 
-        internal RendererConfiguration(RenderingConfiguration renderingConfiguration, Type objectType)
+        internal RendererConfiguration(Type targetType, Func<Type, Type, Func<IObjectRenderer>, Log4NetConfiguration> registerRenderer)
         {
-            _renderingConfiguration = renderingConfiguration;
-            _objectType = objectType;
+            _targetType = targetType;
+            _registerRenderer = registerRenderer;
         }
 
         /// <summary>
@@ -23,10 +23,9 @@ namespace FluentLog4Net.Configuration
         /// </summary>
         /// <typeparam name="TRenderer">A type that implements <see cref="IObjectRenderer"/>.</typeparam>
         /// <returns>The current <see cref="RenderingConfiguration"/> instance.</returns>
-        public Log4NetConfiguration Using<TRenderer>() where TRenderer : IObjectRenderer, new()
+        public Log4NetConfiguration Using<TRenderer>() where TRenderer : class, IObjectRenderer, new()
         {
-            _renderingConfiguration.Map.Add(_objectType, new TRenderer());
-            return _renderingConfiguration.Log4NetConfiguration;
+            return _registerRenderer(_targetType, typeof(TRenderer), () => new TRenderer());
         }
 
         /// <summary>
@@ -36,12 +35,25 @@ namespace FluentLog4Net.Configuration
         /// <returns>The current <see cref="RenderingConfiguration"/> instance.</returns>
         public Log4NetConfiguration Using(Type rendererType)
         {
-            var renderer = Activator.CreateInstance(rendererType) as IObjectRenderer;
-            if(renderer == null)
-                throw new ArgumentException("Type " + rendererType.FullName + " must implement IObjectRenderer to be configured as a renderer.");
+            const string invalidType = "Type {0} must implement IObjectRenderer to be configured as a renderer.";
 
-            _renderingConfiguration.Map.Add(_objectType, renderer);
-            return _renderingConfiguration.Log4NetConfiguration;
+            if(!typeof(IObjectRenderer).IsAssignableFrom(rendererType))
+                throw new ArgumentException(String.Format(invalidType, rendererType.FullName));
+
+            return _registerRenderer(_targetType, rendererType, () => (IObjectRenderer)Activator.CreateInstance(rendererType, true));
+        }
+
+        /// <summary>
+        /// Defines the <see cref="IObjectRenderer"/> responsible for rendering the type.
+        /// </summary>
+        /// <param name="renderer">An <see cref="IObjectRenderer"/> instance.</param>
+        /// <returns>The current <see cref="RenderingConfiguration"/> instance.</returns>
+        public Log4NetConfiguration Using(IObjectRenderer renderer)
+        {
+            if(renderer == null)
+                throw new ArgumentNullException("renderer", "Renderer cannot be null.");
+
+            return _registerRenderer(_targetType, renderer.GetType(), () => renderer);
         }
     }
 }

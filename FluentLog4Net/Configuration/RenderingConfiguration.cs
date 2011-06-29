@@ -11,12 +11,13 @@ namespace FluentLog4Net.Configuration
     /// </summary>
     public class RenderingConfiguration
     {
-        internal readonly Log4NetConfiguration Log4NetConfiguration;
-        internal readonly IDictionary<Type, IObjectRenderer> Map = new Dictionary<Type, IObjectRenderer>();
+        private readonly Func<Action<ILoggerRepository>, Log4NetConfiguration> _configure;
+        private readonly Dictionary<Type, IObjectRenderer> _cachedRenderers;
 
-        internal RenderingConfiguration(Log4NetConfiguration log4NetConfiguration)
+        internal RenderingConfiguration(Func<Action<ILoggerRepository>, Log4NetConfiguration> configure)
         {
-            Log4NetConfiguration = log4NetConfiguration;
+            _configure = configure;
+            _cachedRenderers = new Dictionary<Type, IObjectRenderer>();
         }
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace FluentLog4Net.Configuration
         /// <returns>A <see cref="RendererConfiguration"/> instance.</returns>
         public RendererConfiguration Type<TObject>()
         {
-            return new RendererConfiguration(this, typeof(TObject));
+            return new RendererConfiguration(typeof(TObject), RegisterRenderer);
         }
 
         /// <summary>
@@ -36,13 +37,16 @@ namespace FluentLog4Net.Configuration
         /// <returns>A <see cref="RendererConfiguration"/> instance.</returns>
         public RendererConfiguration Type(Type objectType)
         {
-            return new RendererConfiguration(this, objectType);
+            return new RendererConfiguration(objectType, RegisterRenderer);
         }
 
-        internal void ApplyConfigurationTo(ILoggerRepository repository)
+        private Log4NetConfiguration RegisterRenderer(Type targetType, Type rendererType, Func<IObjectRenderer> rendererFactory)
         {
-            foreach(var pair in Map)
-                repository.RendererMap.Put(pair.Key, pair.Value);
+            var renderer = _cachedRenderers.ContainsKey(rendererType)
+                ? _cachedRenderers[rendererType] 
+                : _cachedRenderers[rendererType] = rendererFactory();
+
+            return _configure(repo => repo.RendererMap.Put(targetType, renderer));
         }
     }
 }

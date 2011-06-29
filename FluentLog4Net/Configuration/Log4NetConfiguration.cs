@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using log4net;
 using log4net.Core;
@@ -14,15 +15,13 @@ namespace FluentLog4Net.Configuration
     {
         private readonly RenderingConfiguration _renderingConfiguration;
         private readonly LoggingConfiguration _loggingConfiguration;
-
-        private bool? _reset;
-        private bool? _internalDebugging;
-        private Level _threshold;
+        private readonly List<Action<ILoggerRepository>> _configurationActions;
 
         internal Log4NetConfiguration()
         {
-            _renderingConfiguration = new RenderingConfiguration(this);
-            _loggingConfiguration = new LoggingConfiguration(this);
+            _renderingConfiguration = new RenderingConfiguration(AddConfigurationAction);
+            _loggingConfiguration = new LoggingConfiguration(AddConfigurationAction);
+            _configurationActions = new List<Action<ILoggerRepository>>();
         }
 
         /// <summary>
@@ -32,7 +31,7 @@ namespace FluentLog4Net.Configuration
         /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
         public Log4NetConfiguration InternalDebugging(bool internalDebugging)
         {
-            _internalDebugging = internalDebugging;
+            _configurationActions.Add(_ => LogLog.InternalDebugging = internalDebugging);
             return this;
         }
 
@@ -43,7 +42,9 @@ namespace FluentLog4Net.Configuration
         /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
         public Log4NetConfiguration Overwrite(bool overwrite)
         {
-            _reset = overwrite;
+            if(overwrite)
+                _configurationActions.Insert(0, repo => repo.ResetConfiguration());
+
             return this;
         }
 
@@ -55,7 +56,9 @@ namespace FluentLog4Net.Configuration
         /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
         public Log4NetConfiguration Threshold(Level threshold)
         {
-            _threshold = threshold;
+            if(threshold != null)
+                _configurationActions.Add(repo => repo.Threshold = threshold);
+
             return this;
         }
 
@@ -82,22 +85,19 @@ namespace FluentLog4Net.Configuration
         {
             var repository = LogManager.GetRepository();
             
-            if(_internalDebugging.HasValue)
-                LogLog.InternalDebugging = _internalDebugging.Value;
+            _configurationActions.ForEach(configure => configure(repository));
 
-            if(_reset.HasValue && _reset.Value)
-                repository.ResetConfiguration();
-
-            if(_threshold != null)
-                repository.Threshold = _threshold;
-
-            _renderingConfiguration.ApplyConfigurationTo(repository);
-            _loggingConfiguration.ApplyConfigurationTo(repository);
             repository.Configured = true;
 
             var skeleton = repository as LoggerRepositorySkeleton;
             if(skeleton != null)
                 skeleton.RaiseConfigurationChanged(EventArgs.Empty);
+        }
+
+        private Log4NetConfiguration AddConfigurationAction(Action<ILoggerRepository> configuration)
+        {
+            _configurationActions.Add(configuration);
+            return this;
         }
     }
 }
