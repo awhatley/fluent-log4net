@@ -39,7 +39,7 @@ namespace FluentLog4Net
         }
 
         [Test]
-        public void RenderReusesRendererInstances()
+        public void RenderUsesDistinctRendererInstances()
         {
             Log4Net.Configure()                
                 .Render.Type<Int16>().Using(new Int16Renderer())
@@ -58,11 +58,25 @@ namespace FluentLog4Net
             var singleRenderer = repo.RendererMap.Get(typeof(Single));
             var doubleRenderer = repo.RendererMap.Get(typeof(Double));
 
-            Assert.That(int16Renderer, Is.SameAs(int32Renderer));
-            Assert.That(int32Renderer, Is.SameAs(int64Renderer));
-            Assert.That(int64Renderer, Is.SameAs(decimalRenderer));
-            Assert.That(decimalRenderer, Is.SameAs(singleRenderer));
-            Assert.That(singleRenderer, Is.SameAs(doubleRenderer));
+            Assert.That(int16Renderer, Is.Not.SameAs(int32Renderer));
+            Assert.That(int32Renderer, Is.Not.SameAs(int64Renderer));
+            Assert.That(int64Renderer, Is.Not.SameAs(decimalRenderer));
+            Assert.That(decimalRenderer, Is.Not.SameAs(singleRenderer));
+            Assert.That(singleRenderer, Is.Not.SameAs(doubleRenderer));
+        }
+
+        [Test]
+        public void RenderLambdaUsesActionRenderer()
+        {
+            Log4Net.Configure()
+                .Render.Type<Int32>().Using((map, obj, writer) => { })
+                .ApplyConfiguration();
+
+            var repo = LogManager.GetRepository();
+            var int32Renderer = repo.RendererMap.Get(typeof(Int32));
+
+            Assert.That(int32Renderer, Is.Not.Null);
+            Assert.That(int32Renderer.GetType().Name, Is.EqualTo("ActionRenderer"));
         }
 
         [Test]

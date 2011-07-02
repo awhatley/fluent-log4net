@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using log4net.ObjectRenderer;
 using log4net.Repository;
 
 namespace FluentLog4Net.Configuration
@@ -11,13 +10,13 @@ namespace FluentLog4Net.Configuration
     /// </summary>
     public class RenderingConfiguration
     {
-        private readonly Func<Action<ILoggerRepository>, Log4NetConfiguration> _configure;
-        private readonly Dictionary<Type, IObjectRenderer> _cachedRenderers;
+        private readonly Log4NetConfiguration _log4NetConfiguration;
+        private readonly List<RendererConfiguration> _rendererConfigurations;
 
-        internal RenderingConfiguration(Func<Action<ILoggerRepository>, Log4NetConfiguration> configure)
+        internal RenderingConfiguration(Log4NetConfiguration log4NetConfiguration)
         {
-            _configure = configure;
-            _cachedRenderers = new Dictionary<Type, IObjectRenderer>();
+            _log4NetConfiguration = log4NetConfiguration;
+            _rendererConfigurations = new List<RendererConfiguration>();
         }
 
         /// <summary>
@@ -27,7 +26,7 @@ namespace FluentLog4Net.Configuration
         /// <returns>A <see cref="RendererConfiguration"/> instance.</returns>
         public RendererConfiguration Type<TObject>()
         {
-            return new RendererConfiguration(typeof(TObject), RegisterRenderer);
+            return Type(typeof(TObject));
         }
 
         /// <summary>
@@ -37,16 +36,16 @@ namespace FluentLog4Net.Configuration
         /// <returns>A <see cref="RendererConfiguration"/> instance.</returns>
         public RendererConfiguration Type(Type objectType)
         {
-            return new RendererConfiguration(objectType, RegisterRenderer);
+            var configuration = new RendererConfiguration(_log4NetConfiguration, objectType);
+            _rendererConfigurations.Add(configuration);
+
+            return configuration;
         }
 
-        private Log4NetConfiguration RegisterRenderer(Type targetType, Type rendererType, Func<IObjectRenderer> rendererFactory)
+        internal void ApplyConfigurationTo(ILoggerRepository repository)
         {
-            var renderer = _cachedRenderers.ContainsKey(rendererType)
-                ? _cachedRenderers[rendererType] 
-                : _cachedRenderers[rendererType] = rendererFactory();
-
-            return _configure(repo => repo.RendererMap.Put(targetType, renderer));
+            foreach(var configuration in _rendererConfigurations)
+                configuration.ApplyTo(repository.RendererMap);
         }
     }
 }

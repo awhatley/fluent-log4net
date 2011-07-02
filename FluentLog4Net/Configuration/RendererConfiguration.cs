@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 using log4net.ObjectRenderer;
 
@@ -9,13 +10,14 @@ namespace FluentLog4Net.Configuration
     /// </summary>
     public class RendererConfiguration
     {
+        private readonly Log4NetConfiguration _log4NetConfiguration;
         private readonly Type _targetType;
-        private readonly Func<Type, Type, Func<IObjectRenderer>, Log4NetConfiguration> _registerRenderer;
+        private IObjectRenderer _renderer;
 
-        internal RendererConfiguration(Type targetType, Func<Type, Type, Func<IObjectRenderer>, Log4NetConfiguration> registerRenderer)
+        internal RendererConfiguration(Log4NetConfiguration log4NetConfiguration, Type targetType)
         {
+            _log4NetConfiguration = log4NetConfiguration;
             _targetType = targetType;
-            _registerRenderer = registerRenderer;
         }
 
         /// <summary>
@@ -25,7 +27,8 @@ namespace FluentLog4Net.Configuration
         /// <returns>The current <see cref="RenderingConfiguration"/> instance.</returns>
         public Log4NetConfiguration Using<TRenderer>() where TRenderer : class, IObjectRenderer, new()
         {
-            return _registerRenderer(_targetType, typeof(TRenderer), () => new TRenderer());
+            _renderer = new TRenderer();
+            return _log4NetConfiguration;
         }
 
         /// <summary>
@@ -40,7 +43,8 @@ namespace FluentLog4Net.Configuration
             if(!typeof(IObjectRenderer).IsAssignableFrom(rendererType))
                 throw new ArgumentException(String.Format(invalidType, rendererType.FullName));
 
-            return _registerRenderer(_targetType, rendererType, () => (IObjectRenderer)Activator.CreateInstance(rendererType, true));
+            _renderer = (IObjectRenderer)Activator.CreateInstance(rendererType, true);
+            return _log4NetConfiguration;
         }
 
         /// <summary>
@@ -53,7 +57,40 @@ namespace FluentLog4Net.Configuration
             if(renderer == null)
                 throw new ArgumentNullException("renderer", "Renderer cannot be null.");
 
-            return _registerRenderer(_targetType, renderer.GetType(), () => renderer);
+            _renderer = renderer;
+            return _log4NetConfiguration;
+        }
+
+        /// <summary>
+        /// Defines an <see cref="Action{RendererMap,Object,TextWriter}"/> responsible for 
+        /// rendering the type.
+        /// </summary>
+        /// <param name="renderer">A lambda expression used to render the type.</param>
+        /// <returns>The current <see cref="RenderingConfiguration"/> instance.</returns>
+        public Log4NetConfiguration Using(Action<RendererMap, object, TextWriter> renderer)
+        {
+            _renderer = new ActionRenderer(renderer);
+            return _log4NetConfiguration;
+        }
+
+        internal void ApplyTo(RendererMap map)
+        {
+            map.Put(_targetType, _renderer);
+        }
+
+        private class ActionRenderer : IObjectRenderer
+        {
+            private readonly Action<RendererMap, object, TextWriter> _renderer;
+
+            public ActionRenderer(Action<RendererMap, object, TextWriter> renderer)
+            {
+                _renderer = renderer;
+            }
+
+            public void RenderObject(RendererMap rendererMap, object obj, TextWriter writer)
+            {
+                _renderer(rendererMap, obj, writer);
+            }
         }
     }
 }
