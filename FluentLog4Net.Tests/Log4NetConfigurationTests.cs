@@ -25,6 +25,8 @@ namespace FluentLog4Net
                 .ApplyConfiguration();
 
             Assert.That(LogLog.InternalDebugging, Is.True);
+
+            LogLog.InternalDebugging = false;
         }
 
         [Test]
