@@ -94,6 +94,7 @@ namespace FluentLog4Net
         public void ApplyConfigurationSetsConfigured()
         {
             var repo = LogManager.GetRepository();
+            Assert.That(repo.Configured, Is.False);
             Log4Net.Configure().ApplyConfiguration();
             Assert.That(repo.Configured, Is.True);
         }
