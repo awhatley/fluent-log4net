@@ -27,7 +27,7 @@ namespace FluentLog4Net.Appenders
         }
 
         /// <summary>
-        /// Configures the output target of the console appender.
+        /// Configures the output target of the <see cref="ConsoleAppender"/>.
         /// </summary>
         public ConsoleAppenderTarget Targeting
         {
@@ -35,7 +35,7 @@ namespace FluentLog4Net.Appenders
         }
 
         /// <summary>
-        /// Configures the output target of a console appender.
+        /// Configures the output target of a <see cref="ConsoleAppender"/>.
         /// </summary>
         public class ConsoleAppenderTarget
         {

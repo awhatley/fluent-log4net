@@ -31,5 +31,27 @@ namespace FluentLog4Net
         {
             return build.Definition(console);
         }
+
+        /// <summary>
+        /// Configures logging to the console in color.
+        /// </summary>
+        /// <param name="configure">The <see cref="AppenderConfiguration"/> instance.</param>
+        /// <param name="console">A method to configure the colored console logging.</param>
+        /// <returns>The current <see cref="LoggerConfiguration"/> instance.</returns>
+        public static LoggerConfiguration ColoredConsole(this AppenderConfiguration configure, Action<ColoredConsoleAppenderDefinition> console)
+        {
+            return configure.Appender(Append.To.ColoredConsole(console));
+        }
+
+        /// <summary>
+        /// Builds a <see cref="ColoredConsoleAppenderDefinition"/> instance.
+        /// </summary>
+        /// <param name="build">The <see cref="AppenderDefinitionBuilder"/> instance.</param>
+        /// <param name="console">A method to configure the console logging.</param>
+        /// <returns>A configured <see cref="ColoredConsoleAppenderDefinition"/> instance.</returns>
+        public static ColoredConsoleAppenderDefinition ColoredConsole(this AppenderDefinitionBuilder build, Action<ColoredConsoleAppenderDefinition> console)
+        {
+            return build.Definition(console);
+        }
     }
 }

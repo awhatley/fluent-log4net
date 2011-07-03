@@ -1,12 +1,35 @@
+using log4net;
 using log4net.Appender;
 
 using NUnit.Framework;
+
+using log4net.Repository.Hierarchy;
 
 namespace FluentLog4Net.Appenders
 {
     [TestFixture]
     public class ConsoleAppenderTests
     {
+        [SetUp]
+        public void Setup()
+        {
+            LogManager.GetRepository().ResetConfiguration();
+        }
+
+        [Test]
+        public void ConfigurationExtensionMethod()
+        {
+            IAppender appender = null;
+
+            Log4Net.Configure()
+                .Logging.Root(log => log.To.Console(c => appender = ((IAppenderDefinition)c).Appender))
+                .ApplyConfiguration();
+
+            var repo = (Hierarchy)LogManager.GetRepository();
+            Assert.That(repo.Root.Appenders, Has.Count.EqualTo(1));
+            Assert.That(repo.Root.Appenders[0], Is.EqualTo(appender));
+        }
+
         [Test]
         public void AppenderReferenceIsConstant()
         {
@@ -28,7 +51,7 @@ namespace FluentLog4Net.Appenders
                 .Targeting.ConsoleOut());
 
             var appender = (ConsoleAppender)console.Appender;
-            Assert.That(appender.Target, Is.EqualTo("Console.Out"));
+            Assert.That(appender.Target, Is.EqualTo(ConsoleAppender.ConsoleOut));
         }
 
         [Test]
@@ -38,7 +61,7 @@ namespace FluentLog4Net.Appenders
                 .Targeting.ConsoleError());
 
             var appender = (ConsoleAppender)console.Appender;
-            Assert.That(appender.Target, Is.EqualTo("Console.Error"));
+            Assert.That(appender.Target, Is.EqualTo(ConsoleAppender.ConsoleError));
         }
     }
 }

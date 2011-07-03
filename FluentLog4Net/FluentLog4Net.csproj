@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Appenders\AppenderDefinitionBuilder.cs" />
+    <Compile Include="Helpers\ColorBuilder.cs" />
+    <Compile Include="Appenders\ColoredConsoleAppenderDefinition.cs" />
     <Compile Include="Configuration\AppenderConfiguration.cs" />
     <Compile Include="Append.cs" />
     <Compile Include="Appenders\ConsoleAppenderDefinition.cs" />
@@ -59,7 +61,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\RenderingConfiguration.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
