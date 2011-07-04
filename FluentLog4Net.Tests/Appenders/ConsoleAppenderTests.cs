@@ -22,7 +22,7 @@ namespace FluentLog4Net.Appenders
             IAppender appender = null;
 
             Log4Net.Configure()
-                .Logging.Root(log => log.To.Console(c => appender = ((IAppenderDefinition)c).Appender))
+                .Logging.Default(log => log.To.Console(c => appender = ((IAppenderDefinition)c).Appender))
                 .ApplyConfiguration();
 
             var repo = (Hierarchy)LogManager.GetRepository();

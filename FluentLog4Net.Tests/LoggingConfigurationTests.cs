@@ -26,7 +26,7 @@ namespace FluentLog4Net
         public void RootLoggingLevel()
         {
             Log4Net.Configure()
-                .Logging.Root(log => log.At(Level.Severe))
+                .Logging.Default(log => log.At(Level.Severe))
                 .ApplyConfiguration();
 
             var repo = (Hierarchy)LogManager.GetRepository();
@@ -37,7 +37,7 @@ namespace FluentLog4Net
         public void NullRootLoggingLevelIsIgnored()
         {
             Log4Net.Configure()
-                .Logging.Root(log => log.At(null))
+                .Logging.Default(log => log.At(null))
                 .ApplyConfiguration();
 
             var repo = (Hierarchy)LogManager.GetRepository();
@@ -52,7 +52,7 @@ namespace FluentLog4Net
             mockDefinition.Stub(a => a.Appender).Return(mockAppender);
 
             Log4Net.Configure()
-                .Logging.Root(log => log
+                .Logging.Default(log => log
                     .At(Level.Verbose)
                     .To.Appender(mockDefinition))
                 .ApplyConfiguration();
@@ -84,7 +84,7 @@ namespace FluentLog4Net
         public void NullChildLoggingLevelAppliesRootLevel()
         {
             Log4Net.Configure()
-                .Logging.Root(log => log.At(Level.Trace))
+                .Logging.Default(log => log.At(Level.Trace))
                 .Logging.For<Int32>(log => log.At(null))
                 .Logging.For(typeof(Int64), log => log.At(null))
                 .Logging.For("Foo", log => log.At(null))

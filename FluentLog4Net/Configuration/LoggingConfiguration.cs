@@ -25,7 +25,7 @@ namespace FluentLog4Net.Configuration
         /// </summary>
         /// <param name="log">A method that configures the root logger.</param>
         /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
-        public Log4NetConfiguration Root(Action<LoggerConfiguration> log)
+        public Log4NetConfiguration Default(Action<LoggerConfiguration> log)
         {
             log(_rootLoggerConfiguration);
             return _log4NetConfiguration;
