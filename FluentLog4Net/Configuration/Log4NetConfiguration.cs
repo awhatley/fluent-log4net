@@ -12,59 +12,23 @@ namespace FluentLog4Net.Configuration
     /// </summary>
     public class Log4NetConfiguration
     {
-        private readonly RenderingConfiguration _renderingConfiguration;
+        private readonly RepositoryConfiguration _repositoryConfiguration;
         private readonly LoggingConfiguration _loggingConfiguration;
-
-        private bool? _reset;
-        private bool? _internalDebugging;
-        private Level _threshold;
+        private readonly RenderingConfiguration _renderingConfiguration;
 
         internal Log4NetConfiguration()
         {
-            _renderingConfiguration = new RenderingConfiguration(this);
+            _repositoryConfiguration = new RepositoryConfiguration(this);
             _loggingConfiguration = new LoggingConfiguration(this);
+            _renderingConfiguration = new RenderingConfiguration(this);
         }
 
         /// <summary>
-        /// Enables or disables internal log4net debugging for this configuration.
+        /// Configures global log4net settings.
         /// </summary>
-        /// <param name="internalDebugging">Whether to enable internal debugging.</param>
-        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
-        public Log4NetConfiguration InternalDebugging(bool internalDebugging)
+        public RepositoryConfiguration Global
         {
-            _internalDebugging = internalDebugging;
-            return this;
-        }
-
-        /// <summary>
-        /// Resets the existing configuration before applying any new settings.
-        /// </summary>
-        /// <param name="overwrite">Whether to overwrite the existing configuration.</param>
-        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
-        public Log4NetConfiguration Overwrite(bool overwrite)
-        {
-            _reset = overwrite;
-            return this;
-        }
-
-        /// <summary>
-        /// Applies a default threshold to all loggers across the repository.
-        /// </summary>
-        /// <param name="threshold">A <see cref="Level"/> at which to limit logged messages.</param>
-        /// <returns></returns>
-        /// <returns>The current <see cref="Log4NetConfiguration"/> instance.</returns>
-        public Log4NetConfiguration Threshold(Level threshold)
-        {
-            _threshold = threshold;
-            return this;
-        }
-
-        /// <summary>
-        /// Registers object renderers for custom message formatting.
-        /// </summary>
-        public RenderingConfiguration Render
-        {
-            get { return _renderingConfiguration; }
+            get { return _repositoryConfiguration; }
         }
 
         /// <summary>
@@ -76,23 +40,25 @@ namespace FluentLog4Net.Configuration
         }
 
         /// <summary>
+        /// Registers object renderers for custom message formatting.
+        /// </summary>
+        public RenderingConfiguration Render
+        {
+            get { return _renderingConfiguration; }
+        }
+
+        /// <summary>
         /// Ends fluent configuration and exports all settings to log4net.
         /// </summary>
         public void ApplyConfiguration()
         {
             var repository = LogManager.GetRepository();
+            repository.ResetConfiguration();
             
-            if(_internalDebugging.HasValue)
-                LogLog.InternalDebugging = _internalDebugging.Value;
-
-            if(_reset.HasValue && _reset.Value)
-                repository.ResetConfiguration();
-
-            if(_threshold != null)
-                repository.Threshold = _threshold;
-
+            _repositoryConfiguration.ApplyConfigurationTo(repository);
             _renderingConfiguration.ApplyConfigurationTo(repository);
             _loggingConfiguration.ApplyConfigurationTo(repository);
+
             repository.Configured = true;
 
             var skeleton = repository as LoggerRepositorySkeleton;

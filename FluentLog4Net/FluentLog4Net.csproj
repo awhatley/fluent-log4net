@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Appenders\AppenderDefinitionBuilder.cs" />
+    <Compile Include="Configuration\RepositoryConfiguration.cs" />
     <Compile Include="Helpers\ColorBuilder.cs" />
     <Compile Include="Appenders\ColoredConsoleAppenderDefinition.cs" />
     <Compile Include="Configuration\AppenderConfiguration.cs" />

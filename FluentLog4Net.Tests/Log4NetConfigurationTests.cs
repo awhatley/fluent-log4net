@@ -16,69 +16,14 @@ namespace FluentLog4Net
         }
 
         [Test]
-        public void DebugSetsInternalDebugging()
-        {
-            LogLog.InternalDebugging = false;
-
-            Log4Net.Configure()
-                .InternalDebugging(true)
-                .ApplyConfiguration();
-
-            Assert.That(LogLog.InternalDebugging, Is.True);
-
-            LogLog.InternalDebugging = false;
-        }
-
-        [Test]
-        public void DebugFalseDisablesInternalDebugging()
-        {
-            LogLog.InternalDebugging = true;
-
-            Log4Net.Configure()
-                .InternalDebugging(false)
-                .ApplyConfiguration();
-
-            Assert.That(LogLog.InternalDebugging, Is.False);
-        }
-
-        [Test]
-        public void OverwriteResetsConfiguration()
+        public void ApplyConfigurationResetsConfiguration()
         {
             var reset = false;
             var repo = LogManager.GetRepository();
             repo.ConfigurationReset += (sender, args) => reset = true;
 
-            Log4Net.Configure()
-                .Overwrite(true)
-                .ApplyConfiguration();
-
+            Log4Net.Configure().ApplyConfiguration();
             Assert.That(reset, Is.True);
-        }
-
-        [Test]
-        public void OverwriteFalseDoesNotResetConfiguration()
-        {
-            var reset = false;
-            var repo = LogManager.GetRepository();
-            repo.ConfigurationReset += (sender, args) => reset = true;
-
-            Log4Net.Configure()
-                .Overwrite(false)
-                .ApplyConfiguration();
-
-            Assert.That(reset, Is.False);
-        }
-
-        [Test]
-        public void ThresholdAppliesRepositoryThreshold()
-        {
-            var repo = LogManager.GetRepository();
-
-            Log4Net.Configure()
-                .Threshold(Level.Notice)
-                .ApplyConfiguration();
-
-            Assert.That(repo.Threshold, Is.EqualTo(Level.Notice));
         }
 
         [Test]
@@ -97,6 +42,7 @@ namespace FluentLog4Net
         {
             var repo = LogManager.GetRepository();
             Assert.That(repo.Configured, Is.False);
+
             Log4Net.Configure().ApplyConfiguration();
             Assert.That(repo.Configured, Is.True);
         }
