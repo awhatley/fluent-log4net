@@ -16,7 +16,7 @@ All configuration begins with the root `Log4Net` class and its `Configure()` met
 simplest possible configuration with a single console appender would be:
 
     Log4Net.Configure()
-        .Logging.Root(log => log.To.Console())
+        .Logging.Default(log => log.To.Console())
         .ApplyConfiguration();
 
 More advanced scenarios including repository settings and custom renderers, as well as 
@@ -24,11 +24,9 @@ individual logger configurations can also be done. Note that most of the specifi
 configurations haven't been written yet, but they are coming.
 
     Log4Net.Configure()
-        .InternalDebugging(true)
-        .Overwrite(true)
-        .Threshold(Level.Debug)
+        .Global.Threshold(Level.Debug)
 
-        .Logging.Root(log => log
+        .Logging.Default(log => log
             .To.Console(c => c.Targeting.ConsoleOut))
 
         .Logging.For<MyClass>(log => log
@@ -53,24 +51,24 @@ separate appenders for each logger, which may not be desired. To share appender 
 you can define them ahead of time using the `Append.To` definition builder.
 
     var myConsoleAppender = Append.To.Console(c => c.Targeting.ConsoleOut);
-    var myDbAppender = Append.To
+    var myFileAppender = Append.To
         .File(f => f
             .Named("myfile.log")
             .Append(true)
             .LockingMinimally());
 
     Log4Net.Configure()
-        .Logging.Root(log => log
+        .Logging.Default(log => log
             .At(Level.Debug)
             .To.Appender(myConsoleAppender))
 
         .Logging.For<MyClass>(log => log
             .At(Level.Error)
-            .To.Appender(myDbAppender))
+            .To.Appender(myFileAppender))
 
         .Logging.For<MyOtherClass(log => log
             .At(Level.Error)
-            .To.Appender(myDbAppender))
+            .To.Appender(myFileAppender))
 
         .ApplyConfiguration();    
 
