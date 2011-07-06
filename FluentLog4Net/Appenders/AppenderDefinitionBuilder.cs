@@ -8,27 +8,33 @@ namespace FluentLog4Net.Appenders
     public class AppenderDefinitionBuilder
     {
         /// <summary>
-        /// Builds and configures an appender definition of the specified type.
+        /// Builds a <see cref="ConsoleAppenderDefinition"/> instance.
         /// </summary>
-        /// <typeparam name="T">The type of appender definition.</typeparam>
-        /// <param name="configure">A method to configure the instance.</param>
-        /// <returns>A configured <see cref="IAppenderDefinition"/> instance.</returns>
-        public T Definition<T>(Action<T> configure)
-            where T : IAppenderDefinition, new()
+        /// <param name="console">A method to configure the console logging.</param>
+        /// <returns>A configured <see cref="ConsoleAppenderDefinition"/> instance.</returns>
+        public ConsoleAppenderDefinition Console(Action<ConsoleAppenderDefinition> console)
         {
-            return Definition(new T(), configure);
+            return BuildAndConfigure(console);
         }
 
         /// <summary>
-        /// Builds and configures an appender definition of the specified type.
+        /// Builds a <see cref="ColoredConsoleAppenderDefinition"/> instance.
         /// </summary>
-        /// <typeparam name="T">The type of appender definition.</typeparam>
-        /// <param name="definition">The instance to configure.</param>
-        /// <param name="configure">A method to configure the instance.</param>
-        /// <returns>A configured <see cref="IAppenderDefinition"/> instance.</returns>
-        public T Definition<T>(T definition, Action<T> configure)
-            where T : IAppenderDefinition
+        /// <param name="console">A method to configure the console logging.</param>
+        /// <returns>A configured <see cref="ColoredConsoleAppenderDefinition"/> instance.</returns>
+        public ColoredConsoleAppenderDefinition ColoredConsole(Action<ColoredConsoleAppenderDefinition> console)
         {
+            return BuildAndConfigure(console);
+        }
+
+        public FileAppenderDefinition File(Action<FileAppenderDefinition> file)
+        {
+            return BuildAndConfigure(file);
+        }
+
+        private static T BuildAndConfigure<T>(Action<T> configure) where T : AppenderDefinition<T>, new()
+        {
+            var definition = new T();
             configure(definition);
             return definition;
         }

@@ -6,7 +6,6 @@ using log4net.Appender;
 using NUnit.Framework;
 
 using log4net.Core;
-using log4net.Repository.Hierarchy;
 using log4net.Util;
 
 using Colors = log4net.Appender.ColoredConsoleAppender.Colors;
@@ -23,40 +22,12 @@ namespace FluentLog4Net.Appenders
         }
 
         [Test]
-        public void ConfigurationExtensionMethod()
-        {
-            IAppender appender = null;
-
-            Log4Net.Configure()
-                .Logging.Default(log => log.To.ColoredConsole(c => appender = ((IAppenderDefinition)c).Appender))
-                .ApplyConfiguration();
-
-            var repo = (Hierarchy)LogManager.GetRepository();
-            Assert.That(repo.Root.Appenders, Has.Count.EqualTo(1));
-            Assert.That(repo.Root.Appenders[0], Is.EqualTo(appender));
-        }
-
-        [Test]
-        public void AppenderReferenceIsConstant()
-        {
-            IAppenderDefinition console = Append.To.ColoredConsole(c => { });
-            Assert.That(console.Appender, Is.SameAs(console.Appender));
-        }
-
-        [Test]
-        public void AppenderIsColoredConsoleAppender()
-        {
-            IAppenderDefinition console = Append.To.ColoredConsole(c => { });
-            Assert.That(console.Appender, Is.TypeOf<ColoredConsoleAppender>());
-        }
-
-        [Test]
         public void ConsoleOut()
         {
             IAppenderDefinition console = Append.To.ColoredConsole(c => c
                 .Targeting.ConsoleOut());
 
-            var appender = (ColoredConsoleAppender)console.Appender;
+            var appender = (ColoredConsoleAppender)console.CreateAppender();
             Assert.That(appender.Target, Is.EqualTo(ColoredConsoleAppender.ConsoleOut));
         }
 
@@ -66,7 +37,7 @@ namespace FluentLog4Net.Appenders
             IAppenderDefinition console = Append.To.ColoredConsole(c => c
                 .Targeting.ConsoleError());
 
-            var appender = (ColoredConsoleAppender)console.Appender;
+            var appender = (ColoredConsoleAppender)console.CreateAppender();
             Assert.That(appender.Target, Is.EqualTo(ColoredConsoleAppender.ConsoleError));
         }
 
@@ -83,7 +54,7 @@ namespace FluentLog4Net.Appenders
                 .Color(Level.Critical).Using(color => color.Magenta)
                 .Color(Level.Debug).Using(color => color.Black.On.Green));
 
-            var appender = (ColoredConsoleAppender)console.Appender;
+            var appender = (ColoredConsoleAppender)console.CreateAppender();
             var mapping = (LevelMapping)mappingField.GetValue(appender);
             mapping.ActivateOptions();
 

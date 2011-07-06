@@ -1,10 +1,8 @@
 using log4net;
-using log4net.Core;
-using log4net.Util;
 
 using NUnit.Framework;
 
-namespace FluentLog4Net
+namespace FluentLog4Net.Configuration
 {
     [TestFixture]
     public class Log4NetConfigurationTests

@@ -11,31 +11,24 @@ namespace FluentLog4Net.Appenders
     /// <summary>
     /// Configures a <see cref="ColoredConsoleAppender"/> instance.
     /// </summary>
-    public class ColoredConsoleAppenderDefinition : IAppenderDefinition
+    public class ColoredConsoleAppenderDefinition : AppenderDefinition<ColoredConsoleAppenderDefinition>
     {
-        private readonly ColoredConsoleAppender _appender;
-        private readonly ColoredConsoleAppenderTarget _targeting;
-        private readonly Dictionary<int, ColoredConsoleAppenderColors> _colors;
+        private readonly Target _targeting;
+        private readonly List<Colors> _colors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleAppenderDefinition"/> class.
         /// </summary>
         public ColoredConsoleAppenderDefinition()
         {
-            _appender = new ColoredConsoleAppender();
-            _targeting = new ColoredConsoleAppenderTarget(this);
-            _colors = new Dictionary<int, ColoredConsoleAppenderColors>();
-        }
-
-        IAppender IAppenderDefinition.Appender
-        {
-            get { return _appender; }
+            _targeting = new Target(this);
+            _colors = new List<Colors>();
         }
 
         /// <summary>
         /// Configures the output target of the <see cref="ColoredConsoleAppender"/>.
         /// </summary>
-        public ColoredConsoleAppenderTarget Targeting
+        public Target Targeting
         {
             get { return _targeting; }
         }
@@ -44,28 +37,41 @@ namespace FluentLog4Net.Appenders
         /// Configures colorization for the specified log <see cref="Level"/>.
         /// </summary>
         /// <param name="level">The <see cref="Level"/> for which to customize colors.</param>
-        /// <returns>A <see cref="ColoredConsoleAppenderColors"/> instance.</returns>
-        public ColoredConsoleAppenderColors Color(Level level)
+        /// <returns>A <see cref="Colors"/> instance.</returns>
+        public Colors Color(Level level)
         {
             if(level == null)
                 level = Level.All;
 
-            if(!_colors.ContainsKey(level.Value))
-                _colors.Add(level.Value, new ColoredConsoleAppenderColors(this, level));
+            var colors = new Colors(this, level);
+            _colors.Add(colors);
 
-            return _colors[level.Value];
+            return colors;
+        }
+
+        protected override AppenderSkeleton CreateAppender()
+        {
+            var appender = new ColoredConsoleAppender();
+            _targeting.ApplyTo(appender);
+
+            foreach(var color in _colors)
+                color.ApplyTo(appender);
+
+            return appender;
         }
 
         /// <summary>
         /// Configures the output target of a <see cref="ColoredConsoleAppender"/>.
         /// </summary>
-        public class ColoredConsoleAppenderTarget
+        public class Target
         {
             private readonly ColoredConsoleAppenderDefinition _consoleAppenderDefinition;
+            private string _target;
 
-            internal ColoredConsoleAppenderTarget(ColoredConsoleAppenderDefinition consoleAppenderDefinition)
+            internal Target(ColoredConsoleAppenderDefinition consoleAppenderDefinition)
             {
                 _consoleAppenderDefinition = consoleAppenderDefinition;
+                _target = ColoredConsoleAppender.ConsoleOut;
             }
 
             /// <summary>
@@ -74,7 +80,7 @@ namespace FluentLog4Net.Appenders
             /// <returns>The current <see cref="ColoredConsoleAppenderDefinition"/> instance.</returns>
             public ColoredConsoleAppenderDefinition ConsoleOut()
             {
-                _consoleAppenderDefinition._appender.Target = ConsoleAppender.ConsoleOut;
+                _target = ColoredConsoleAppender.ConsoleOut;
                 return _consoleAppenderDefinition;
             }
 
@@ -84,20 +90,26 @@ namespace FluentLog4Net.Appenders
             /// <returns>The current <see cref="ColoredConsoleAppenderDefinition"/> instance.</returns>
             public ColoredConsoleAppenderDefinition ConsoleError()
             {
-                _consoleAppenderDefinition._appender.Target = ConsoleAppender.ConsoleError;
+                _target = ColoredConsoleAppender.ConsoleError;
                 return _consoleAppenderDefinition;
+            }
+
+            internal void ApplyTo(ColoredConsoleAppender appender)
+            {
+                appender.Target = _target;
             }
         }
 
         /// <summary>
         /// Configures the color mappings for a <see cref="ColoredConsoleAppender"/>
         /// </summary>
-        public class ColoredConsoleAppenderColors
+        public class Colors
         {
             private readonly ColoredConsoleAppenderDefinition _consoleAppenderDefinition;
             private readonly Level _level;
+            private Color _combinedColor;
 
-            internal ColoredConsoleAppenderColors(ColoredConsoleAppenderDefinition consoleAppenderDefinition, Level level)
+            internal Colors(ColoredConsoleAppenderDefinition consoleAppenderDefinition, Level level)
             {
                 _consoleAppenderDefinition = consoleAppenderDefinition;
                 _level = level;
@@ -110,15 +122,17 @@ namespace FluentLog4Net.Appenders
             /// <returns>The current <see cref="ColoredConsoleAppenderDefinition"/> instance.</returns>
             public ColoredConsoleAppenderDefinition Using(Func<ColorBuilder<ForegroundColor>, Color> color)
             {
-                var combinedColor = color(new ColorBuilder<ForegroundColor>());
-
-                _consoleAppenderDefinition._appender.AddMapping(new ColoredConsoleAppender.LevelColors {
-                    Level = _level,
-                    ForeColor = (ColoredConsoleAppender.Colors)combinedColor.Foreground,
-                    BackColor = (ColoredConsoleAppender.Colors)combinedColor.Background,
-                });
-
+                _combinedColor = color(new ColorBuilder<ForegroundColor>());
                 return _consoleAppenderDefinition;
+            }
+
+            internal void ApplyTo(ColoredConsoleAppender appender)
+            {
+                appender.AddMapping(new ColoredConsoleAppender.LevelColors {
+                    Level = _level,
+                    ForeColor = (ColoredConsoleAppender.Colors)_combinedColor.Foreground,
+                    BackColor = (ColoredConsoleAppender.Colors)_combinedColor.Background,
+                });
             }
         }
     }

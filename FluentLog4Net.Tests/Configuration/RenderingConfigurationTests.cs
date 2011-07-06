@@ -6,7 +6,7 @@ using log4net.ObjectRenderer;
 
 using NUnit.Framework;
 
-namespace FluentLog4Net
+namespace FluentLog4Net.Configuration
 {
     [TestFixture]
     public class RenderingConfigurationTests

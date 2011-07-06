@@ -1,4 +1,6 @@
-﻿using log4net.Core;
+using System.Collections.Generic;
+
+using log4net.Core;
 using log4net.Repository.Hierarchy;
 
 namespace FluentLog4Net.Configuration
@@ -8,12 +10,13 @@ namespace FluentLog4Net.Configuration
     /// </summary>
     public class LoggerConfiguration
     {
-        private readonly AppenderConfiguration _appenderConfiguration;
+        private readonly List<AppenderConfiguration> _appenderConfigurations;
         private Level _level;
+        private bool _additivity;
 
         internal LoggerConfiguration()
         {
-            _appenderConfiguration = new AppenderConfiguration(this);
+            _appenderConfigurations = new List<AppenderConfiguration>();
         }
 
         /// <summary>
@@ -27,12 +30,23 @@ namespace FluentLog4Net.Configuration
             return this;
         }
 
+        public LoggerConfiguration InheritAppenders(bool inherit)
+        {
+            _additivity = inherit;
+            return this;
+        }
+
         /// <summary>
         /// Configures the logger to write to an appender definition.
         /// </summary>
         public AppenderConfiguration To
         {
-            get { return _appenderConfiguration; }
+            get
+            {
+                var configuration = new AppenderConfiguration(this); 
+                _appenderConfigurations.Add(configuration);
+                return configuration;
+            }
         }
 
         internal void ApplyTo(Logger logger)
@@ -40,7 +54,11 @@ namespace FluentLog4Net.Configuration
             if(_level != null)
                 logger.Level = _level;
 
-            _appenderConfiguration.ApplyTo(logger);
+            if(_additivity == false)
+                logger.Additivity = false;
+
+            foreach(var appenderConfiguration in _appenderConfigurations)
+                appenderConfiguration.ApplyTo(logger);
         }
     }
 }

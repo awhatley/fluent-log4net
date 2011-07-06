@@ -8,7 +8,7 @@ namespace FluentLog4Net
     /// <summary>
     /// Extension methods for configuring appender definitions.
     /// </summary>
-    public static class Extensions
+    public static class AppenderExtensions
     {
         /// <summary>
         /// Configures logging to the console.
@@ -22,17 +22,6 @@ namespace FluentLog4Net
         }
 
         /// <summary>
-        /// Builds a <see cref="ConsoleAppenderDefinition"/> instance.
-        /// </summary>
-        /// <param name="build">The <see cref="AppenderDefinitionBuilder"/> instance.</param>
-        /// <param name="console">A method to configure the console logging.</param>
-        /// <returns>A configured <see cref="ConsoleAppenderDefinition"/> instance.</returns>
-        public static ConsoleAppenderDefinition Console(this AppenderDefinitionBuilder build, Action<ConsoleAppenderDefinition> console)
-        {
-            return build.Definition(console);
-        }
-
-        /// <summary>
         /// Configures logging to the console in color.
         /// </summary>
         /// <param name="configure">The <see cref="AppenderConfiguration"/> instance.</param>
@@ -43,15 +32,9 @@ namespace FluentLog4Net
             return configure.Appender(Append.To.ColoredConsole(console));
         }
 
-        /// <summary>
-        /// Builds a <see cref="ColoredConsoleAppenderDefinition"/> instance.
-        /// </summary>
-        /// <param name="build">The <see cref="AppenderDefinitionBuilder"/> instance.</param>
-        /// <param name="console">A method to configure the console logging.</param>
-        /// <returns>A configured <see cref="ColoredConsoleAppenderDefinition"/> instance.</returns>
-        public static ColoredConsoleAppenderDefinition ColoredConsole(this AppenderDefinitionBuilder build, Action<ColoredConsoleAppenderDefinition> console)
+        public static LoggerConfiguration File(this AppenderConfiguration configure, Action<FileAppenderDefinition> file)
         {
-            return build.Definition(console);
+            return configure.Appender(Append.To.File(file));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using log4net.Appender;
+using log4net.Appender;
 
 namespace FluentLog4Net.Appenders
 {
@@ -8,10 +8,8 @@ namespace FluentLog4Net.Appenders
     public interface IAppenderDefinition
     {
         /// <summary>
-        /// Retrieves the appender instance being configured by this definition.
+        /// Builds an appender instance configured per the definition.
         /// </summary>
-        /// <value>An <see cref="IAppender" /> instance. The instance must
-        /// be the same on successive calls.</value>
-        IAppender Appender { get; }
+        IAppender CreateAppender();
     }
 }

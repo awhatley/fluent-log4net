@@ -11,13 +11,13 @@ using NUnit.Framework;
 
 using Rhino.Mocks;
 
-namespace FluentLog4Net
+namespace FluentLog4Net.Configuration
 {
     [TestFixture]
     public class LoggingConfigurationTests
     {
         [SetUp]
-        public void ResetConfiguration()
+        public void Setup()
         {
             LogManager.GetRepository().ResetConfiguration();
         }
@@ -49,7 +49,7 @@ namespace FluentLog4Net
         {
             var mockAppender = MockRepository.GenerateMock<IAppender>();
             var mockDefinition = MockRepository.GenerateMock<IAppenderDefinition>();
-            mockDefinition.Stub(a => a.Appender).Return(mockAppender);
+            mockDefinition.Stub(a => a.CreateAppender()).Return(mockAppender);
 
             Log4Net.Configure()
                 .Logging.Default(log => log
@@ -108,7 +108,7 @@ namespace FluentLog4Net
         {
             var mockAppender = MockRepository.GenerateMock<IAppender>();
             var mockDefinition = MockRepository.GenerateMock<IAppenderDefinition>();
-            mockDefinition.Stub(a => a.Appender).Return(mockAppender);
+            mockDefinition.Stub(a => a.CreateAppender()).Return(mockAppender);
 
             Log4Net.Configure()
                 .Logging.For<Int32>(log => log.To.Appender(mockDefinition))

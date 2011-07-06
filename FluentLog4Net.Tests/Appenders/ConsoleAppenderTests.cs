@@ -17,40 +17,12 @@ namespace FluentLog4Net.Appenders
         }
 
         [Test]
-        public void ConfigurationExtensionMethod()
-        {
-            IAppender appender = null;
-
-            Log4Net.Configure()
-                .Logging.Default(log => log.To.Console(c => appender = ((IAppenderDefinition)c).Appender))
-                .ApplyConfiguration();
-
-            var repo = (Hierarchy)LogManager.GetRepository();
-            Assert.That(repo.Root.Appenders, Has.Count.EqualTo(1));
-            Assert.That(repo.Root.Appenders[0], Is.EqualTo(appender));
-        }
-
-        [Test]
-        public void AppenderReferenceIsConstant()
-        {
-            IAppenderDefinition console = Append.To.Console(c => { });
-            Assert.That(console.Appender, Is.SameAs(console.Appender));
-        }
-
-        [Test]
-        public void AppenderIsConsoleAppender()
-        {
-            IAppenderDefinition console = Append.To.Console(c => { });
-            Assert.That(console.Appender, Is.TypeOf<ConsoleAppender>());
-        }
-
-        [Test]
         public void ConsoleOut()
         {
             IAppenderDefinition console = Append.To.Console(c => c
                 .Targeting.ConsoleOut());
 
-            var appender = (ConsoleAppender)console.Appender;
+            var appender = (ConsoleAppender)console.CreateAppender();
             Assert.That(appender.Target, Is.EqualTo(ConsoleAppender.ConsoleOut));
         }
 
@@ -60,7 +32,7 @@ namespace FluentLog4Net.Appenders
             IAppenderDefinition console = Append.To.Console(c => c
                 .Targeting.ConsoleError());
 
-            var appender = (ConsoleAppender)console.Appender;
+            var appender = (ConsoleAppender)console.CreateAppender();
             Assert.That(appender.Target, Is.EqualTo(ConsoleAppender.ConsoleError));
         }
     }
