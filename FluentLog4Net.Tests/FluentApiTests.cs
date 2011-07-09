@@ -2,7 +2,8 @@
 using System.IO;
 
 using FluentLog4Net.Appenders;
-using FluentLog4Net.Configuration;
+using FluentLog4Net.ErrorHandlers;
+using FluentLog4Net.Filters;
 using FluentLog4Net.Layouts;
 
 using NUnit.Framework;
@@ -22,7 +23,7 @@ namespace FluentLog4Net
         private IFilterDefinition _myFilter;
         private IAppenderDefinition _myAppender;
         private ILayoutDefinition _myLayout;
-        private IErrorHandler _myErrorHandler;
+        private IErrorHandlerDefinition _myErrorHandler;
         private IObjectRenderer _myRenderer;
 
         [Test]
@@ -31,7 +32,7 @@ namespace FluentLog4Net
             _myFilter = null;
             _myAppender = Append.To.Console(c => c.Targeting.ConsoleOut());
             _myLayout = Layout.Using.Pattern("%message%newline");
-            _myErrorHandler = null;
+            _myErrorHandler = Handle.Errors.OnlyOnce(h => h.PrefixedBy("ERROR"));
             _myRenderer = null;
         }
 
@@ -47,7 +48,7 @@ namespace FluentLog4Net
                         .Targeting.ConsoleOut()
                         .Format.Pattern("%-5level [%thread]: %message%newline")
                         .Apply.Filter(_myFilter)
-                        .HandleErrors.OnlyOnce())
+                        .HandleErrors.OnlyOnce(h => h.PrefixedBy("ERROR")))
 
                     .To.ColoredConsole(c => c
                         .Targeting.ConsoleError()
@@ -58,7 +59,7 @@ namespace FluentLog4Net
                             .Space()
                             .Message().NewLine())                        
                         .Apply.Filter(_myFilter)
-                        .HandleErrors.OnlyOnce())
+                        .HandleErrors.OnlyOnce(h => h.PrefixedBy("ERROR")))
 
                     .To.File(f => f
                         .Append().LockingMinimally()

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using FluentLog4Net.Configuration;
+using FluentLog4Net.Helpers;
 
 using log4net.Appender;
 using log4net.Core;
@@ -24,25 +25,6 @@ namespace FluentLog4Net.Appenders
             _errorHandler = new ErrorHandlerConfiguration<T>((T)this);
         }
 
-        protected abstract AppenderSkeleton CreateAppender();
-
-        IAppender IAppenderDefinition.CreateAppender()
-        {
-            var appender = CreateAppender();
-
-            if(_threshold != null)
-                appender.Threshold = _threshold;
-
-            _layout.ApplyTo(appender);
-            
-            foreach(var filter in _filters)
-                filter.ApplyTo(appender);
-
-            _errorHandler.ApplyTo(appender);
-
-            return appender;
-        }
-
         public T At(Level threshold)
         {
             _threshold = threshold;
@@ -56,17 +38,29 @@ namespace FluentLog4Net.Appenders
 
         public FilterConfiguration<T> Apply
         {
-            get
-            {
-                var configuration = new FilterConfiguration<T>((T)this); 
-                _filters.Add(configuration); 
-                return configuration;
-            }
+            get { return _filters.AddNew(new FilterConfiguration<T>((T)this)); }
         }
 
         public ErrorHandlerConfiguration<T> HandleErrors
         {
             get { return _errorHandler; }
+        }
+
+        protected abstract AppenderSkeleton CreateAppender();
+
+        IAppender IAppenderDefinition.CreateAppender()
+        {
+            var appender = CreateAppender();
+            appender.Threshold = _threshold;
+
+            _layout.ApplyTo(appender);
+            
+            foreach(var filter in _filters)
+                filter.ApplyTo(appender);
+
+            _errorHandler.ApplyTo(appender);
+
+            return appender;
         }
     }
 }

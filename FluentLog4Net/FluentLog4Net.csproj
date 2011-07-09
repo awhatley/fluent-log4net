@@ -50,7 +50,13 @@
     <Compile Include="Appenders\FileAppenderDefinition.cs" />
     <Compile Include="Appenders\IAppenderDefinition.cs" />
     <Compile Include="Appenders\RollingFileAppenderDefinition.cs" />
+    <Compile Include="ErrorHandlers\ErrorHandlerDefinitionBuilder.cs" />
+    <Compile Include="ErrorHandlers\IErrorHandlerDefinition.cs" />
+    <Compile Include="ErrorHandlers\OnlyOnceErrorHandlerDefinition.cs" />
+    <Compile Include="Filters\IFilterDefinition.cs" />
     <Compile Include="Configuration\LoggerConfiguration.cs" />
+    <Compile Include="Helpers\Build.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Layout.cs" />
     <Compile Include="LayoutExtensions.cs" />
     <Compile Include="Layouts\ILayoutDefinition.cs" />
@@ -74,10 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\RenderingConfiguration.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ErrorHandlers\" />
-    <Folder Include="Filters\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

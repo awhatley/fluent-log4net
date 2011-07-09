@@ -1,5 +1,7 @@
 ﻿using System;
 
+using FluentLog4Net.Helpers;
+
 namespace FluentLog4Net.Layouts
 {
     /// <summary>
@@ -14,7 +16,7 @@ namespace FluentLog4Net.Layouts
         /// <returns>A configured <see cref="FluentPatternLayoutDefinition"/> instance.</returns>
         public FluentPatternLayoutDefinition Pattern(Action<FluentPatternLayoutDefinition> pattern)
         {
-            return BuildAndConfigure(pattern);
+            return Build.AndConfigure(pattern);
         }
 
         /// <summary>
@@ -25,13 +27,6 @@ namespace FluentLog4Net.Layouts
         public PatternLayoutDefinition Pattern(string pattern)
         {
             return new PatternLayoutDefinition(pattern);
-        }
-
-        private static T BuildAndConfigure<T>(Action<T> configure) where T : class, ILayoutDefinition, new()
-        {
-            var definition = new T();
-            configure(definition);
-            return definition;
         }
     }
 }

@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Appenders\AppenderDefinitionBuilderTests.cs" />
+    <Compile Include="Appenders\AppenderDefinitionTests.cs" />
     <Compile Include="Appenders\ConsoleAppenderTests.cs" />
     <Compile Include="Appenders\ColoredConsoleAppenderTests.cs" />
     <Compile Include="Appenders\FileAppenderTests.cs" />

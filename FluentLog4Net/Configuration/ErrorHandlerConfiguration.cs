@@ -1,7 +1,6 @@
-﻿using System;
+﻿using FluentLog4Net.ErrorHandlers;
 
 using log4net.Appender;
-using log4net.Core;
 
 namespace FluentLog4Net.Configuration
 {
@@ -11,22 +10,29 @@ namespace FluentLog4Net.Configuration
     /// <typeparam name="T"></typeparam>
     public class ErrorHandlerConfiguration<T>
     {
-        public ErrorHandlerConfiguration(T instance)
+        private readonly T _parent;
+        private IErrorHandlerDefinition _handler;
+
+        internal ErrorHandlerConfiguration(T parent)
         {
+            _parent = parent;
         }
 
-        public T OnlyOnce()
+        /// <summary>
+        /// Configures the appender to use the specified error handler definition.
+        /// </summary>
+        /// <param name="handler">An <see cref="IErrorHandlerDefinition"/> instance.</param>
+        /// <returns>The parent <see cref="T"/> instance in the fluent API.</returns>
+        public T With(IErrorHandlerDefinition handler)
         {
-            throw new NotImplementedException();
+            _handler = handler;
+            return _parent;
         }
 
-        public T With(IErrorHandler handler)
+        internal void ApplyTo(AppenderSkeleton appender)
         {
-            throw new NotImplementedException();
-        }
-
-        public void ApplyTo(AppenderSkeleton appender)
-        {
+            if(_handler != null)
+                appender.ErrorHandler = _handler.CreateErrorHandler();
         }
     }
 }

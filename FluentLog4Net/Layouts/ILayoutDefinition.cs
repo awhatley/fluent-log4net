@@ -10,6 +10,7 @@ namespace FluentLog4Net.Layouts
         /// <summary>
         /// Builds a layout instance configured per the definition.
         /// </summary>
+        /// <returns>An <see cref="ILayout"/> instance.</returns>
         ILayout CreateLayout();
     }
 }

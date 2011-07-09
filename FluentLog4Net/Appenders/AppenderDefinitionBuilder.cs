@@ -1,5 +1,7 @@
 using System;
 
+using FluentLog4Net.Helpers;
+
 namespace FluentLog4Net.Appenders
 {
     /// <summary>
@@ -14,7 +16,7 @@ namespace FluentLog4Net.Appenders
         /// <returns>A configured <see cref="ConsoleAppenderDefinition"/> instance.</returns>
         public ConsoleAppenderDefinition Console(Action<ConsoleAppenderDefinition> console)
         {
-            return BuildAndConfigure(console);
+            return Build.AndConfigure(console);
         }
 
         /// <summary>
@@ -24,19 +26,17 @@ namespace FluentLog4Net.Appenders
         /// <returns>A configured <see cref="ColoredConsoleAppenderDefinition"/> instance.</returns>
         public ColoredConsoleAppenderDefinition ColoredConsole(Action<ColoredConsoleAppenderDefinition> console)
         {
-            return BuildAndConfigure(console);
+            return Build.AndConfigure(console);
         }
 
+        /// <summary>
+        /// Builds a <see cref="FileAppenderDefinition"/> instance.
+        /// </summary>
+        /// <param name="file">A method to configure the file logging.</param>
+        /// <returns>A configured <see cref="FileAppenderDefinition"/> instance.</returns>
         public FileAppenderDefinition File(Action<FileAppenderDefinition> file)
         {
-            return BuildAndConfigure(file);
-        }
-
-        private static T BuildAndConfigure<T>(Action<T> configure) where T : AppenderDefinition<T>, new()
-        {
-            var definition = new T();
-            configure(definition);
-            return definition;
+            return Build.AndConfigure(file);
         }
     }
 }
