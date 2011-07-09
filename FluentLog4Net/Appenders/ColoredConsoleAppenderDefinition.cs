@@ -14,7 +14,7 @@ namespace FluentLog4Net.Appenders
     public class ColoredConsoleAppenderDefinition : AppenderDefinition<ColoredConsoleAppenderDefinition>
     {
         private readonly Target _targeting;
-        private readonly List<Colors> _colors;
+        private readonly List<ColorMapping> _colors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleAppenderDefinition"/> class.
@@ -22,7 +22,7 @@ namespace FluentLog4Net.Appenders
         public ColoredConsoleAppenderDefinition()
         {
             _targeting = new Target(this);
-            _colors = new List<Colors>();
+            _colors = new List<ColorMapping>();
         }
 
         /// <summary>
@@ -37,16 +37,13 @@ namespace FluentLog4Net.Appenders
         /// Configures colorization for the specified log <see cref="Level"/>.
         /// </summary>
         /// <param name="level">The <see cref="Level"/> for which to customize colors.</param>
-        /// <returns>A <see cref="Colors"/> instance.</returns>
-        public Colors Color(Level level)
+        /// <returns>A <see cref="ColorMapping"/> instance.</returns>
+        public ColorMapping Color(Level level)
         {
             if(level == null)
                 level = Level.All;
 
-            var colors = new Colors(this, level);
-            _colors.Add(colors);
-
-            return colors;
+            return _colors.AddNew(new ColorMapping(this, level));
         }
 
         protected override AppenderSkeleton CreateAppender()
@@ -103,13 +100,13 @@ namespace FluentLog4Net.Appenders
         /// <summary>
         /// Configures the color mappings for a <see cref="ColoredConsoleAppender"/>
         /// </summary>
-        public class Colors
+        public class ColorMapping
         {
             private readonly ColoredConsoleAppenderDefinition _consoleAppenderDefinition;
             private readonly Level _level;
             private Color _combinedColor;
 
-            internal Colors(ColoredConsoleAppenderDefinition consoleAppenderDefinition, Level level)
+            internal ColorMapping(ColoredConsoleAppenderDefinition consoleAppenderDefinition, Level level)
             {
                 _consoleAppenderDefinition = consoleAppenderDefinition;
                 _level = level;

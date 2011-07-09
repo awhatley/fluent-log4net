@@ -1,6 +1,4 @@
-﻿using System;
-
-using log4net.Appender;
+﻿using log4net.Appender;
 
 namespace FluentLog4Net.Appenders
 {
@@ -13,20 +11,15 @@ namespace FluentLog4Net.Appenders
         private FileAppender.LockingModelBase _lockingModel;
         private bool _appendToFile;
 
+        /// <summary>
+        /// Provides a name for the file to write log messages to.
+        /// </summary>
+        /// <param name="fileName">The full path of the file to write to.</param>
+        /// <returns>The current <see cref="FileAppenderDefinition"/> instance.</returns>
         public FileAppenderDefinition Named(string fileName)
         {
             _name = fileName;
             return this;
-        }
-
-        /// <summary>
-        /// Begins configuring a new <see cref="RollingFileAppender"/> targeted at the
-        /// specified rolling file.
-        /// </summary>
-        /// <returns>A new <see cref="FileAppenderDefinition"/> instance.</returns>
-        public FileAppenderDefinition Rolling(Action<RollingFileAppenderDefinition> rolling)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -63,15 +56,15 @@ namespace FluentLog4Net.Appenders
             return this;
         }
 
-        public FileAppenderDefinition Append()
+        /// <summary>
+        /// Configures whether log messages should be appended to the file or that it
+        /// should be overwritten.
+        /// </summary>
+        /// <param name="append">Whether to append to the file.</param>
+        /// <returns>The current <see cref="FileAppenderDefinition"/> instance.</returns>
+        public FileAppenderDefinition Append(bool append)
         {
-            _appendToFile = true;
-            return this;
-        }
-
-        public FileAppenderDefinition Overwrite()
-        {
-            _appendToFile = false;
+            _appendToFile = append;
             return this;
         }
 

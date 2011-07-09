@@ -29,11 +29,11 @@ namespace FluentLog4Net
         [Test]
         public void FluentBuilderExamples()
         {
-            _myFilter = null;
+            _myFilter = null; // TODO
             _myAppender = Append.To.Console(c => c.Targeting.ConsoleOut());
             _myLayout = Layout.Using.Pattern("%message%newline");
             _myErrorHandler = Handle.Errors.OnlyOnce(h => h.PrefixedBy("ERROR"));
-            _myRenderer = null;
+            _myRenderer = null; // TODO
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace FluentLog4Net
                         .HandleErrors.OnlyOnce(h => h.PrefixedBy("ERROR")))
 
                     .To.File(f => f
-                        .Append().LockingMinimally()
+                        .Append(true).LockingMinimally()
                         .Format.Layout(_myLayout)
                         .Apply.Filter(_myFilter)
                         .HandleErrors.With(_myErrorHandler))
@@ -102,7 +102,7 @@ namespace FluentLog4Net
         {
             public IAppender CreateAppender()
             {
-                throw new NotImplementedException();
+                return null;
             }
         }
 
@@ -110,7 +110,6 @@ namespace FluentLog4Net
         {
             public void RenderObject(RendererMap rendererMap, object obj, TextWriter writer)
             {
-                throw new NotImplementedException();
             }
         }
     }

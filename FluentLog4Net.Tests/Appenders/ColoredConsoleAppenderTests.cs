@@ -8,8 +8,6 @@ using NUnit.Framework;
 using log4net.Core;
 using log4net.Util;
 
-using Colors = log4net.Appender.ColoredConsoleAppender.Colors;
-
 namespace FluentLog4Net.Appenders
 {
     [TestFixture]
@@ -62,14 +60,14 @@ namespace FluentLog4Net.Appenders
             var critical = (ColoredConsoleAppender.LevelColors)mapping.Lookup(Level.Critical);
             var debug = (ColoredConsoleAppender.LevelColors)mapping.Lookup(Level.Debug);
             
-            Assert.That(alert.ForeColor, Is.EqualTo(Colors.White));
-            Assert.That(alert.BackColor, Is.EqualTo(Colors.Red | Colors.HighIntensity));
+            Assert.That(alert.ForeColor, Is.EqualTo(ColoredConsoleAppender.Colors.White));
+            Assert.That(alert.BackColor, Is.EqualTo(ColoredConsoleAppender.Colors.Red | ColoredConsoleAppender.Colors.HighIntensity));
 
-            Assert.That(critical.ForeColor, Is.EqualTo(Colors.Purple));
-            Assert.That(critical.BackColor, Is.EqualTo((Colors)0));
+            Assert.That(critical.ForeColor, Is.EqualTo(ColoredConsoleAppender.Colors.Purple));
+            Assert.That(critical.BackColor, Is.EqualTo((ColoredConsoleAppender.Colors)0));
 
-            Assert.That(debug.ForeColor, Is.EqualTo((Colors)0));
-            Assert.That(debug.BackColor, Is.EqualTo(Colors.Green));
+            Assert.That(debug.ForeColor, Is.EqualTo((ColoredConsoleAppender.Colors)0));
+            Assert.That(debug.BackColor, Is.EqualTo(ColoredConsoleAppender.Colors.Green));
         }
     }
 }

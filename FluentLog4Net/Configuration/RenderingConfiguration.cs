@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
+using FluentLog4Net.Helpers;
+
 using log4net.ObjectRenderer;
 using log4net.Repository;
 
@@ -38,10 +40,7 @@ namespace FluentLog4Net.Configuration
         /// <returns>A <see cref="RendererConfiguration"/> instance.</returns>
         public RendererConfiguration Type(Type objectType)
         {
-            var configuration = new RendererConfiguration(_log4NetConfiguration, objectType);
-            _rendererConfigurations.Add(configuration);
-
-            return configuration;
+            return _rendererConfigurations.AddNew(new RendererConfiguration(_log4NetConfiguration, objectType));
         }
 
         internal void ApplyConfigurationTo(ILoggerRepository repository)

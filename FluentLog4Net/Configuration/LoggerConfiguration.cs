@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using FluentLog4Net.Helpers;
+
 using log4net.Core;
 using log4net.Repository.Hierarchy;
 
@@ -41,12 +43,7 @@ namespace FluentLog4Net.Configuration
         /// </summary>
         public AppenderConfiguration To
         {
-            get
-            {
-                var configuration = new AppenderConfiguration(this); 
-                _appenderConfigurations.Add(configuration);
-                return configuration;
-            }
+            get { return _appenderConfigurations.AddNew(new AppenderConfiguration(this)); }
         }
 
         internal void ApplyTo(Logger logger)
