@@ -313,7 +313,7 @@ namespace FluentLog4Net.Layouts
             return layout;
         }
 
-        protected virtual string BuildPattern()
+        internal virtual string BuildPattern()
         {
             return _pattern + (_modifier != null ? _modifier.BuildPattern() : String.Empty);
         }
@@ -382,7 +382,7 @@ namespace FluentLog4Net.Layouts
                 return this;
             }
 
-            protected override string BuildPattern()
+            internal override string BuildPattern()
             {
                 var pattern = "%" + 
                     (_leftJustified ? "-" : String.Empty) +

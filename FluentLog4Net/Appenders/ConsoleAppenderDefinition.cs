@@ -19,20 +19,24 @@ namespace FluentLog4Net.Appenders
             _targeting = new Target(this);
         }
 
-        protected override AppenderSkeleton CreateAppender()
-        {
-            var appender = new ConsoleAppender();
-            _targeting.ApplyTo(appender);
-
-            return appender;
-        }
-
         /// <summary>
         /// Configures the output target of the <see cref="ConsoleAppender"/>.
         /// </summary>
         public Target Targeting
         {
             get { return _targeting; }
+        }
+
+        /// <summary>
+        /// Builds a <see cref="ConsoleAppender"/> with the current configuration.
+        /// </summary>
+        /// <returns>A <see cref="ConsoleAppender"/> instance.</returns>
+        protected override AppenderSkeleton CreateAppender()
+        {
+            var appender = new ConsoleAppender();
+            _targeting.ApplyTo(appender);
+
+            return appender;
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace FluentLog4Net.Layouts
             _pattern = pattern;
         }
 
-        public ILayout CreateLayout()
+        ILayout ILayoutDefinition.CreateLayout()
         {
             return new PatternLayout(_pattern);
         }

@@ -46,6 +46,10 @@ namespace FluentLog4Net.Appenders
             return _colors.AddItem(new ColorMapping(this, level));
         }
 
+        /// <summary>
+        /// Builds a <see cref="ColoredConsoleAppender"/> with the current configuration.
+        /// </summary>
+        /// <returns>A <see cref="ColoredConsoleAppender"/> instance.</returns>
         protected override AppenderSkeleton CreateAppender()
         {
             var appender = new ColoredConsoleAppender();

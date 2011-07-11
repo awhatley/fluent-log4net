@@ -13,7 +13,7 @@ namespace FluentLog4Net.Configuration
         private readonly T _parent;
         private IFilterDefinition _filter;
 
-        public FilterConfiguration(T parent)
+        internal FilterConfiguration(T parent)
         {
             _parent = parent;
         }
@@ -29,7 +29,7 @@ namespace FluentLog4Net.Configuration
             return _parent;
         }
 
-        public void ApplyTo(AppenderSkeleton appender)
+        internal void ApplyTo(AppenderSkeleton appender)
         {
             if(_filter != null)
                 appender.AddFilter(_filter.CreateFilter());

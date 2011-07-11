@@ -55,10 +55,10 @@
     <Compile Include="ErrorHandlers\OnlyOnceErrorHandlerDefinition.cs" />
     <Compile Include="Filters\IFilterDefinition.cs" />
     <Compile Include="Configuration\LoggerConfiguration.cs" />
+    <Compile Include="Handle.cs" />
     <Compile Include="Helpers\Build.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Layout.cs" />
-    <Compile Include="LayoutExtensions.cs" />
     <Compile Include="Layouts\ILayoutDefinition.cs" />
     <Compile Include="Configuration\RepositoryConfiguration.cs" />
     <Compile Include="Configuration\ErrorHandlerConfiguration.cs" />
@@ -69,7 +69,6 @@
     <Compile Include="Configuration\AppenderConfiguration.cs" />
     <Compile Include="Append.cs" />
     <Compile Include="Appenders\ConsoleAppenderDefinition.cs" />
-    <Compile Include="AppenderExtensions.cs" />
     <Compile Include="Configuration\LayoutConfiguration.cs" />
     <Compile Include="Layouts\LayoutDefinitionBuilder.cs" />
     <Compile Include="Layouts\FluentPatternLayoutDefinition.cs" />

@@ -10,7 +10,8 @@ namespace FluentLog4Net.ErrorHandlers
     public class ErrorHandlerDefinitionBuilder
     {
         /// <summary>
-        /// Builds an <see cref="OnlyOnceErrorHandlerDefinition"/> instance.
+        /// Implements log4net's default error handling policy, which consists of emitting a message 
+        /// for the first error in an appender and ignoring all subsequent errors.
         /// </summary>
         /// <returns>A configured <see cref="OnlyOnceErrorHandlerDefinition"/> instance.</returns>
         public OnlyOnceErrorHandlerDefinition OnlyOnce(Action<OnlyOnceErrorHandlerDefinition> handler)

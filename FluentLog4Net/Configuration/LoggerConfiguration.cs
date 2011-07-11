@@ -32,6 +32,11 @@ namespace FluentLog4Net.Configuration
             return this;
         }
 
+        /// <summary>
+        /// Specifies whether to inherit appender configurations from parent loggers.
+        /// </summary>
+        /// <param name="inherit">Whether to inherit appenders.</param>
+        /// <returns>The current <see cref="LoggerConfiguration"/> instance.</returns>
         public LoggerConfiguration InheritAppenders(bool inherit)
         {
             _additivity = inherit;

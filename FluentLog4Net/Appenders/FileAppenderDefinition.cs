@@ -68,6 +68,10 @@ namespace FluentLog4Net.Appenders
             return this;
         }
 
+        /// <summary>
+        /// Builds a <see cref="FileAppender"/> with the current configuration.
+        /// </summary>
+        /// <returns>A <see cref="FileAppender"/> instance.</returns>
         protected override AppenderSkeleton CreateAppender()
         {
             return new FileAppender {

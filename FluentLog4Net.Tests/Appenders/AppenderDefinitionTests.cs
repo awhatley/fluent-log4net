@@ -34,7 +34,7 @@ namespace FluentLog4Net.Appenders
             var definition = new TestDefinition(appender);
             var threshold = Level.Error;
 
-            definition.At(threshold);
+            definition = definition.At(threshold);
             ((IAppenderDefinition)definition).CreateAppender();
 
             Assert.That(appender.Threshold, Is.EqualTo(threshold));
@@ -46,7 +46,7 @@ namespace FluentLog4Net.Appenders
             var appender = MockRepository.GenerateMock<AppenderSkeleton>();
             var definition = new TestDefinition(appender);
 
-            definition.At(null);
+            definition = definition.At(null);
             ((IAppenderDefinition)definition).CreateAppender();
 
             Assert.That(appender.Threshold, Is.Null);
@@ -59,9 +59,11 @@ namespace FluentLog4Net.Appenders
             var definition = new TestDefinition(appender);
             var threshold = Level.Warn;
 
-            definition.At(null);
-            definition.At(Level.Error);
-            definition.At(threshold);
+            definition = definition
+                .At(null)
+                .At(Level.Error)
+                .At(threshold);
+
             ((IAppenderDefinition)definition).CreateAppender();
 
             Assert.That(appender.Threshold, Is.EqualTo(threshold));

@@ -10,7 +10,7 @@ namespace FluentLog4Net.Layouts
     public class LayoutDefinitionBuilder
     {
         /// <summary>
-        /// Builds a <see cref="FluentPatternLayoutDefinition"/> instance.
+        /// Uses a flexible layout configurable with a fluent API.
         /// </summary>
         /// <param name="pattern">A method to configure the pattern layout.</param>
         /// <returns>A configured <see cref="FluentPatternLayoutDefinition"/> instance.</returns>
@@ -20,7 +20,7 @@ namespace FluentLog4Net.Layouts
         }
 
         /// <summary>
-        /// Builds a <see cref="PatternLayoutDefinition"/> instance.
+        /// Uses a flexible layout configurable with a pattern string.
         /// </summary>
         /// <param name="pattern">The pattern string to use.</param>
         /// <returns>A configured <see cref="PatternLayoutDefinition"/> instance.</returns>

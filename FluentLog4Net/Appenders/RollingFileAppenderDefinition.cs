@@ -51,6 +51,10 @@ namespace FluentLog4Net.Appenders
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Builds a <see cref="RollingFileAppender"/> with the current configuration.
+        /// </summary>
+        /// <returns>A <see cref="RollingFileAppender"/> instance.</returns>
         protected override AppenderSkeleton CreateAppender()
         {
             throw new NotImplementedException();

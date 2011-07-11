@@ -10,7 +10,7 @@ namespace FluentLog4Net.Appenders
     public class AppenderDefinitionBuilder
     {
         /// <summary>
-        /// Builds a <see cref="ConsoleAppenderDefinition"/> instance.
+        /// Configures logging to the console.
         /// </summary>
         /// <param name="console">A method to configure the console logging.</param>
         /// <returns>A configured <see cref="ConsoleAppenderDefinition"/> instance.</returns>
@@ -20,7 +20,7 @@ namespace FluentLog4Net.Appenders
         }
 
         /// <summary>
-        /// Builds a <see cref="ColoredConsoleAppenderDefinition"/> instance.
+        /// Configures logging to the console in color.
         /// </summary>
         /// <param name="console">A method to configure the console logging.</param>
         /// <returns>A configured <see cref="ColoredConsoleAppenderDefinition"/> instance.</returns>
@@ -30,7 +30,7 @@ namespace FluentLog4Net.Appenders
         }
 
         /// <summary>
-        /// Builds a <see cref="FileAppenderDefinition"/> instance.
+        /// Configures logging to a file.
         /// </summary>
         /// <param name="file">A method to configure the file logging.</param>
         /// <returns>A configured <see cref="FileAppenderDefinition"/> instance.</returns>
