@@ -43,7 +43,7 @@ namespace FluentLog4Net.Appenders
             if(level == null)
                 level = Level.All;
 
-            return _colors.AddNew(new ColorMapping(this, level));
+            return _colors.AddItem(new ColorMapping(this, level));
         }
 
         protected override AppenderSkeleton CreateAppender()

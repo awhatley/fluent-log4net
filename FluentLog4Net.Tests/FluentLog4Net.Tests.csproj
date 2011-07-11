@@ -61,6 +61,7 @@
     <Compile Include="Configuration\Log4NetConfigurationTests.cs" />
     <Compile Include="Configuration\LoggingConfigurationTests.cs" />
     <Compile Include="FluentApiTests.cs" />
+    <Compile Include="Layouts\FluentPatternLayoutTests.cs" />
     <Compile Include="Layouts\LayoutDefinitionBuilderTests.cs" />
     <Compile Include="Layouts\PatternLayoutTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

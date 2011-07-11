@@ -43,7 +43,7 @@ namespace FluentLog4Net.Configuration
         /// </summary>
         public AppenderConfiguration To
         {
-            get { return _appenderConfigurations.AddNew(new AppenderConfiguration(this)); }
+            get { return _appenderConfigurations.AddItem(new AppenderConfiguration(this)); }
         }
 
         internal void ApplyTo(Logger logger)

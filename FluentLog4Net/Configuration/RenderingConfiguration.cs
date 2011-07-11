@@ -40,7 +40,7 @@ namespace FluentLog4Net.Configuration
         /// <returns>A <see cref="RendererConfiguration"/> instance.</returns>
         public RendererConfiguration Type(Type objectType)
         {
-            return _rendererConfigurations.AddNew(new RendererConfiguration(_log4NetConfiguration, objectType));
+            return _rendererConfigurations.AddItem(new RendererConfiguration(_log4NetConfiguration, objectType));
         }
 
         internal void ApplyConfigurationTo(ILoggerRepository repository)

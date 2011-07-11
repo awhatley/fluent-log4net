@@ -38,7 +38,7 @@ namespace FluentLog4Net.Appenders
 
         public FilterConfiguration<T> Apply
         {
-            get { return _filters.AddNew(new FilterConfiguration<T>((T)this)); }
+            get { return _filters.AddItem(new FilterConfiguration<T>((T)this)); }
         }
 
         public ErrorHandlerConfiguration<T> HandleErrors
