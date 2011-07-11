@@ -1,9 +1,7 @@
 ﻿using System;
 
 using log4net;
-using log4net.Core;
 using log4net.Repository;
-using log4net.Util;
 
 namespace FluentLog4Net.Configuration
 {

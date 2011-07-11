@@ -3,8 +3,6 @@ using log4net.Appender;
 
 using NUnit.Framework;
 
-using log4net.Repository.Hierarchy;
-
 namespace FluentLog4Net.Appenders
 {
     [TestFixture]

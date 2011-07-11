@@ -22,7 +22,7 @@ namespace FluentLog4Net.Configuration
         /// Configures the appender to use the specified error handler definition.
         /// </summary>
         /// <param name="handler">An <see cref="IErrorHandlerDefinition"/> instance.</param>
-        /// <returns>The parent <see cref="T"/> instance in the fluent API.</returns>
+        /// <returns>The parent <typeparamref name="T"/> instance in the fluent API.</returns>
         public T With(IErrorHandlerDefinition handler)
         {
             _handler = handler;

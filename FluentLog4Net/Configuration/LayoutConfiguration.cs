@@ -22,7 +22,7 @@ namespace FluentLog4Net.Configuration
         /// Configures the appender to use the specified layout definition.
         /// </summary>
         /// <param name="layout">An <see cref="ILayoutDefinition"/> instance.</param>
-        /// <returns>The parent <see cref="T"/> instance in the fluent API.</returns>
+        /// <returns>The parent <typeparamref name="T"/> instance in the fluent API.</returns>
         public T Layout(ILayoutDefinition layout)
         {
             _layout = layout;
