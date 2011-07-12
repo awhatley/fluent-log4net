@@ -70,6 +70,7 @@
     <Compile Include="Append.cs" />
     <Compile Include="Appenders\ConsoleAppenderDefinition.cs" />
     <Compile Include="Configuration\LayoutConfiguration.cs" />
+    <Compile Include="Layouts\LayoutDefinition.cs" />
     <Compile Include="Layouts\LayoutDefinitionBuilder.cs" />
     <Compile Include="Layouts\FluentPatternLayoutDefinition.cs" />
     <Compile Include="Layouts\PatternLayoutDefinition.cs" />

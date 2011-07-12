@@ -53,11 +53,13 @@ namespace FluentLog4Net
                     .To.ColoredConsole(c => c
                         .Targeting.ConsoleError()
                         .Format.Pattern(p => p
+                            .Header("Header")
                             .Level().LeftJustified().MinimumWidth(5)
                             .Space()
                             .Literal("[").Thread().Literal("]:")
                             .Space()
-                            .Message().NewLine())                        
+                            .Message().NewLine()
+                            .Footer("Footer"))
                         .Apply.Filter(_myFilter)
                         .HandleErrors.OnlyOnce(h => h.PrefixedBy("ERROR")))
 

@@ -8,37 +8,11 @@ namespace FluentLog4Net.Layouts
     /// <summary>
     /// Configures a <see cref="PatternLayout"/> instance using a fluent API.
     /// </summary>
-    public class FluentPatternLayoutDefinition : ILayoutDefinition
+    public class FluentPatternLayoutDefinition : LayoutDefinition<FluentPatternLayoutDefinition>
     {
-        private string _header;
         private string _pattern = String.Empty;
-        private string _footer;
         private PatternLayoutDefinitionModifier _modifier;
         private PatternLayout.ConverterInfo _customConverter;
-
-        /// <summary>
-        /// Uses the specified header text, which will be appended before 
-        /// any logging events are formatted and appended.
-        /// </summary>
-        /// <param name="header">The header text.</param>
-        /// <returns>The current <see cref="FluentPatternLayoutDefinition"/> instance.</returns>
-        public FluentPatternLayoutDefinition Header(string header)
-        {
-            _header = header;
-            return this;
-        }
-
-        /// <summary>
-        /// Uses the specified footer text, which will be appended after 
-        /// all logging events have been formatted and appended.
-        /// </summary>
-        /// <param name="footer">The footer text.</param>
-        /// <returns>The current <see cref="FluentPatternLayoutDefinition"/> instance.</returns>
-        public FluentPatternLayoutDefinition Footer(string footer)
-        {
-            _footer = footer;
-            return this;
-        }
 
         /// <summary>
         /// Used to output the friendly name of the AppDomain where the logging event was generated.
@@ -299,11 +273,13 @@ namespace FluentLog4Net.Layouts
             return this;
         }
 
-        ILayout ILayoutDefinition.CreateLayout()
+        /// <summary>
+        /// Builds a <see cref="PatternLayout"/> with the current configuration.
+        /// </summary>
+        /// <returns>A <see cref="PatternLayout"/> instance.</returns>
+        protected override LayoutSkeleton CreateLayout()
         {
             var layout = new PatternLayout {
-                Header = _header,
-                Footer = _footer,
                 ConversionPattern = BuildPattern(),
             };
 
@@ -320,6 +296,7 @@ namespace FluentLog4Net.Layouts
 
         private PatternLayoutDefinitionModifier Format(string pattern)
         {
+            // TODO: use one modifier instance instead of chaining them together like this
             return _modifier = new PatternLayoutDefinitionModifier(pattern);
         }
 

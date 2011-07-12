@@ -5,7 +5,7 @@ namespace FluentLog4Net.Layouts
     /// <summary>
     /// Configures a <see cref="PatternLayout"/> instance.
     /// </summary>
-    public class PatternLayoutDefinition : ILayoutDefinition
+    public class PatternLayoutDefinition : LayoutDefinition<PatternLayoutDefinition>
     {
         private readonly string _pattern;
 
@@ -19,7 +19,11 @@ namespace FluentLog4Net.Layouts
             _pattern = pattern;
         }
 
-        ILayout ILayoutDefinition.CreateLayout()
+        /// <summary>
+        /// Builds a <see cref="PatternLayout"/> with the configured pattern.
+        /// </summary>
+        /// <returns>A <see cref="PatternLayout"/> instance.</returns>
+        protected override LayoutSkeleton CreateLayout()
         {
             return new PatternLayout(_pattern);
         }

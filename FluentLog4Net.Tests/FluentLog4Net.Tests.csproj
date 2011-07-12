@@ -63,6 +63,7 @@
     <Compile Include="FluentApiTests.cs" />
     <Compile Include="Layouts\FluentPatternLayoutTests.cs" />
     <Compile Include="Layouts\LayoutDefinitionBuilderTests.cs" />
+    <Compile Include="Layouts\LayoutDefinitionTests.cs" />
     <Compile Include="Layouts\PatternLayoutTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\RenderingConfigurationTests.cs" />
