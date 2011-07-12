@@ -1,4 +1,6 @@
-﻿using FluentLog4Net.Layouts;
+﻿using System;
+
+using FluentLog4Net.Layouts;
 
 using log4net.Appender;
 
@@ -27,6 +29,28 @@ namespace FluentLog4Net.Configuration
         {
             _layout = layout;
             return _parent;
+        }
+
+        /// <summary>
+        /// Uses a flexible layout configurable with a fluent API.
+        /// </summary>
+        /// <typeparam name="T">The type of appender definition being configured.</typeparam>
+        /// <param name="pattern">A method to fluently build a conversion pattern string.</param>
+        /// <returns>The current <typeparamref name="T"/> being configured.</returns>
+        public T Pattern(Action<FluentPatternLayoutDefinition> pattern)
+        {
+            return Layout(FluentLog4Net.Layout.Using.Pattern(pattern));
+        }
+
+        /// <summary>
+        /// Uses a flexible layout configurable with a pattern string.
+        /// </summary>
+        /// <typeparam name="T">The type of appender definition being configured.</typeparam>
+        /// <param name="pattern">A conversion pattern string.</param>
+        /// <returns>The current <typeparamref name="T"/> being configured.</returns>
+        public T Pattern(string pattern)
+        {
+            return Layout(FluentLog4Net.Layout.Using.Pattern(pattern));
         }
 
         internal void ApplyTo(AppenderSkeleton appender)

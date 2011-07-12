@@ -1,4 +1,6 @@
-﻿using FluentLog4Net.ErrorHandlers;
+﻿using System;
+
+using FluentLog4Net.ErrorHandlers;
 
 using log4net.Appender;
 
@@ -27,6 +29,18 @@ namespace FluentLog4Net.Configuration
         {
             _handler = handler;
             return _parent;
+        }
+
+        /// <summary>
+        /// Implements log4net's default error handling policy, which consists of emitting a message 
+        /// for the first error in an appender and ignoring all subsequent errors.
+        /// </summary>
+        /// <typeparam name="T">The type of appender definition being configured.</typeparam>
+        /// <param name="handler">A method to configure the error handler.</param>
+        /// <returns>The current <typeparamref name="T"/> being configured.</returns>
+        public T OnlyOnce(Action<OnlyOnceErrorHandlerDefinition> handler)
+        {
+            return With(Handle.Errors.OnlyOnce(handler));
         }
 
         internal void ApplyTo(AppenderSkeleton appender)
