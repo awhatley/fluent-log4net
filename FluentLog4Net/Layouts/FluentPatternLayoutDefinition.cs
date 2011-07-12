@@ -296,7 +296,6 @@ namespace FluentLog4Net.Layouts
 
         private PatternLayoutDefinitionModifier Format(string pattern)
         {
-            // TODO: use one modifier instance instead of chaining them together like this
             return _modifier = new PatternLayoutDefinitionModifier(pattern);
         }
 

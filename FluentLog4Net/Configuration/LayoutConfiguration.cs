@@ -34,7 +34,6 @@ namespace FluentLog4Net.Configuration
         /// <summary>
         /// Uses a flexible layout configurable with a fluent API.
         /// </summary>
-        /// <typeparam name="T">The type of appender definition being configured.</typeparam>
         /// <param name="pattern">A method to fluently build a conversion pattern string.</param>
         /// <returns>The current <typeparamref name="T"/> being configured.</returns>
         public T Pattern(Action<FluentPatternLayoutDefinition> pattern)
@@ -45,12 +44,49 @@ namespace FluentLog4Net.Configuration
         /// <summary>
         /// Uses a flexible layout configurable with a pattern string.
         /// </summary>
-        /// <typeparam name="T">The type of appender definition being configured.</typeparam>
         /// <param name="pattern">A conversion pattern string.</param>
         /// <returns>The current <typeparamref name="T"/> being configured.</returns>
         public T Pattern(string pattern)
         {
             return Layout(FluentLog4Net.Layout.Using.Pattern(pattern));
+        }
+
+        /// <summary>
+        /// Renders only the exception message from the logging event.
+        /// </summary>
+        /// <returns>The current <typeparamref name="T"/> being configured.</returns>
+        public T ExceptionMessage()
+        {
+            return Layout(FluentLog4Net.Layout.Using.ExceptionMessage());
+        }
+
+        /// <summary>
+        /// Renders the level of the log statement, followed by " - " and then the message itself.
+        /// </summary>
+        /// <returns>The current <typeparamref name="T"/> being configured.</returns>
+        public T SimpleMessage()
+        {
+            return Layout(FluentLog4Net.Layout.Using.SimpleMessage());
+        }
+
+        /// <summary>
+        /// Formats the log events as XML elements.
+        /// </summary>
+        /// <param name="xml">A method to configure the xml layout.</param>
+        /// <returns>The current <typeparamref name="T"/> being configured.</returns>
+        public T Xml(Action<XmlLayoutDefinition> xml)
+        {
+            return Layout(FluentLog4Net.Layout.Using.Xml(xml));
+        }
+
+        /// <summary>
+        /// Formats the log events as XML elements compatible with the log4j schema.
+        /// </summary>
+        /// <param name="xml">A method to configure the xml layout.</param>
+        /// <returns>The current <typeparamref name="T"/> being configured.</returns>
+        public T XmlInLog4JSchema(Action<XmlLog4jLayoutDefinition> xml)
+        {
+            return Layout(FluentLog4Net.Layout.Using.XmlInLog4JSchema(xml));
         }
 
         internal void ApplyTo(AppenderSkeleton appender)

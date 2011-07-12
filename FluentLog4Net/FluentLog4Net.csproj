@@ -59,6 +59,7 @@
     <Compile Include="Helpers\Build.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Layout.cs" />
+    <Compile Include="Layouts\ExceptionLayoutDefinition.cs" />
     <Compile Include="Layouts\ILayoutDefinition.cs" />
     <Compile Include="Configuration\RepositoryConfiguration.cs" />
     <Compile Include="Configuration\ErrorHandlerConfiguration.cs" />
@@ -74,6 +75,9 @@
     <Compile Include="Layouts\LayoutDefinitionBuilder.cs" />
     <Compile Include="Layouts\FluentPatternLayoutDefinition.cs" />
     <Compile Include="Layouts\PatternLayoutDefinition.cs" />
+    <Compile Include="Layouts\SimpleLayoutDefinition.cs" />
+    <Compile Include="Layouts\XmlLayoutDefinition.cs" />
+    <Compile Include="Layouts\XmlLog4jLayoutDefinition.cs" />
     <Compile Include="Log4Net.cs" />
     <Compile Include="Configuration\Log4NetConfiguration.cs" />
     <Compile Include="Configuration\LoggingConfiguration.cs" />

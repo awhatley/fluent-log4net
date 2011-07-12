@@ -31,7 +31,7 @@ namespace FluentLog4Net
         {
             _myFilter = null; // TODO
             _myAppender = Append.To.Console(c => c.Targeting.ConsoleOut());
-            _myLayout = Layout.Using.Pattern("%message%newline");
+            _myLayout = Layout.Using.ExceptionMessage();
             _myErrorHandler = Handle.Errors.OnlyOnce(h => h.PrefixedBy("ERROR"));
             _myRenderer = null; // TODO
         }
